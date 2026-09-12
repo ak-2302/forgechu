@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@bubblewrap/cli": "^1.25.0",
+    "wrangler": "^4.131.1"
+  }
+}
