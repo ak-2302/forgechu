@@ -14,6 +14,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       manifest: {
         name: "とりあえずメモ",
+        short_name: "とりメモ",
+        description: "調べたいことを気軽にメモしてリマインダー",
         icons: [
           {
             sizes: "192x192",
