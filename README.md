@@ -3,7 +3,7 @@ enPiT2026夏 チーム開発課題
 # テーマ：すぐに書けて、強力なリマインドを行うメモアプリを作る
 ![image](./image/4koma.png)
 
-公開リンク
+webアプリのデプロイ先
 https://forgechu.pages.dev/
 
 # Team
