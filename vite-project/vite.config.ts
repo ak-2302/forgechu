@@ -11,26 +11,23 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] }),
     VitePWA({
       devOptions: { enabled: true },
+      registerType: "autoUpdate",
       manifest: {
         name: "とりあえずメモ",
-        /*icons: [
+        icons: [
           {
             sizes: "192x192",
-            src: "icon-192x192.png",
+            src: "/favicon_192_test.png",
             type: "image/png",
           },
+        ],
+        screenshots: [
           {
-            sizes: "512x512",
-            src: "icon-512x512.png",
+            sizes: "720x1280",
+            src: "/screenshot_720_1280_test.png",
             type: "image/png",
           },
-          {
-            sizes: "512x512",
-            src: "icon-512x512.png",
-            type: "image/png",
-            purpose: "maskable",
-          },
-        ],*/
+        ],
       },
     }),
   ],
