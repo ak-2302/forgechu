@@ -1,0 +1,29 @@
+
+
+.memo-card {
+    box-sizing: border-box;
+    border-radius: 10px;
+    width: 100%;
+    background-color: white;
+    padding: 1em;
+    overflow: contain;
+    margin-top: 0.3em;
+}
+.memo-text-row {
+    display: flex;
+}
+.memo-text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left;
+    color: black;
+    display: block;
+    font-size: 2em;
+    line-height: 2em;
+}
+.memo-date {
+    color: gray;
+    font-size: 1em;
+    text-align: left;
+}
