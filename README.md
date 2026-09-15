@@ -19,3 +19,10 @@ https://github.com/qwegat
 https://github.com/Rio-2613753
 
 https://github.com/ak−2302
+
+# いろいろ
+フロントエンド：TypeScript,React  
+バックエンド：Python  
+
+[環境構築の手順](https://github.com/ak-2302/forgechu/blob/main/docs/%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89.md)
+
