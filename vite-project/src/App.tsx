@@ -46,6 +46,8 @@ function App() {
           tags={["なぜ"]}
         ></MemoCard>
       </div>
+
+      <button id="add-memo-button" type="button">メモ追加</button>
     </>
   );
 }
