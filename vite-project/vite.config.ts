@@ -17,11 +17,17 @@ export default defineConfig({
         icons: [
           {
             sizes: "192x192",
-            src: "/favicon_192_test.png",
+            src: "/favicon_192.png",
             type: "image/png",
           },
         ],
         screenshots: [
+          {
+            src: "/screenshot_1280_720_test.png",
+            sizes: "1280x720",
+            type: "image/png",
+            form_factor: "wide",
+          },
           {
             sizes: "720x1280",
             src: "/screenshot_720_1280_test.png",
