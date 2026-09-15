@@ -5,3 +5,7 @@ enPiT2026夏 チーム開発課題
 
 公開リンク
 https://forgechu.pages.dev/
+
+# Team
+miro
+https://miro.com/app/board/uXjVHqTZ4e8=/?moveToWidget=3458764682867497308&cot=14
