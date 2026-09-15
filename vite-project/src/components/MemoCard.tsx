@@ -11,9 +11,9 @@ const MemoCard = (props: {
       <div className="memo-text-row">
         <p className="memo-text">{props.textData}</p>
         <>
-          {props.tags.forEach((tagging) => {
+          {props.tags.map(tagging => (
             <MemoTag tag={ tagging }></MemoTag>
-          })}
+          ))}
         </>
       </div>
       <p className="memo-date">{props.date}</p>

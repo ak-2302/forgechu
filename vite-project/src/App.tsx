@@ -35,6 +35,16 @@ function App() {
           date={"2026/09/15 15:36:00"}
           tags={["とは"]}
         ></MemoCard>
+        <MemoCard
+          textData={"二重飛び"}
+          date={"2026/09/15 15:36:00"}
+          tags={["方法"]}
+        ></MemoCard>
+        <MemoCard
+          textData={"人類の誕生"}
+          date={"2026/09/15 15:36:00"}
+          tags={["なぜ"]}
+        ></MemoCard>
       </div>
     </>
   );
