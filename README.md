@@ -3,8 +3,12 @@ enPiT2026夏 チーム開発課題
 # テーマ：すぐに書けて、強力なリマインドを行うメモアプリを作る
 ![image](./image/4koma.png)
 
-webアプリのデプロイ先
-https://forgechu.pages.dev/
+# デプロイについて
+## [デプロイ先](https://forgechu.pages.dev/)
+キャッシュ設定でうまく動作しない・過去バージョンが更新されない場合は、[こちら](https://forgechu.pages.dev/?  )
+## デプロイ設定
+- mainブランチを自動でデプロイします。
+- vite-projectディレクトリで`npm run build`を行います。
 
 # Team
 miro
