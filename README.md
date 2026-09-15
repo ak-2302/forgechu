@@ -19,3 +19,7 @@ https://github.com/qwegat
 https://github.com/Rio-2613753
 
 https://github.com/ak−2302
+
+# いろいろ
+フロントエンド：TypeScript,React
+バックエンド：Python
