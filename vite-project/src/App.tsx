@@ -20,6 +20,13 @@ function App() {
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
   }, [memos]);
 
+  useEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
+    input.style.height = 'auto';
+    input.style.height = `${input.scrollHeight}px`;
+  }, [text]);
+
   const openEditor = () => {
     if (editorRef.current?.open) return;
     editorRef.current?.showModal();
@@ -87,7 +94,7 @@ function App() {
               placeholder="疑問をメモ…"
               value={text}
               onChange={event => setText(event.target.value)}
-              rows={4}
+              rows={1}
             />
             <button className="memo-save-button" type="submit" disabled={!text.trim()}>保存</button>
           </div>
