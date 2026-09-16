@@ -10,7 +10,7 @@ function App() {
     { id: 'initial-2', textData: 'ナビエ=ストークス方程式', date: '2026/09/15 15:36:00', tags: ['とは'] },
   ]);
   const [text, setText] = useState('');
-  const [tags, setTags] = useState<string[]>([]);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const editorRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -26,10 +26,10 @@ function App() {
     const date = `${now.getFullYear()}/${pad(now.getMonth() + 1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
     setMemos(current => [
       ...current,
-      { id: crypto.randomUUID(), textData: text.trim(), date, tags: [...tags] },
+      { id: crypto.randomUUID(), textData: text.trim(), date, tags: selectedTag ? [selectedTag] : [] },
     ]);
     setText('');
-    setTags([]);
+    setSelectedTag(null);
     editorRef.current?.close();
   };
 
@@ -67,7 +67,7 @@ function App() {
             <button className="memo-save-button" type="submit" disabled={!text.trim()}>保存</button>
           </div>
           <fieldset className="question-tags">
-            <legend>疑問タグ（複数選択できます）</legend>
+            <legend>疑問タグ（1つだけ選択できます）</legend>
             <div className="question-tag-options">
               {questionTags.map(tag => (
                 <button
@@ -75,10 +75,8 @@ function App() {
                   type="button"
                   className="question-tag-button"
                   data-question-tag={tag}
-                  aria-pressed={tags.includes(tag)}
-                  onClick={() => setTags(current => current.includes(tag)
-                    ? current.filter(selected => selected !== tag)
-                    : [...current, tag])}
+                  aria-pressed={selectedTag === tag}
+                  onClick={() => setSelectedTag(tag)}
                 >#{tag}</button>
               ))}
             </div>
