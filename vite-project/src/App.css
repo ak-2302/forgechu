@@ -174,9 +174,7 @@ body:has(.memo-editor[open]) {
 }
 
 .memo-editor .question-tag-button {
-  min-width: 7rem;
   margin: 0;
-  padding: 0.7rem 1rem;
   border: 0;
   cursor: pointer;
 }
