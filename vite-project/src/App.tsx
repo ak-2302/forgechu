@@ -41,6 +41,7 @@ function App() {
           height="50"
           src="https://img.icons8.com/ios/50/settings--v1.png"
           alt="settings--v1"
+          style={{ cursor: 'pointer', display: 'none' }}
         />
       </div>
       <div id="memo-list">
