@@ -6,12 +6,12 @@ import { TAGS, TAG_KEY, type Tag } from './tags';
 
 function App() {
   const [memos, setMemos] = useState<{ id: string; textData: string; date: string; tags: Tag[] }[]>([
-    { id: 'initial-1', textData: 'サトシ・ナカモト', date: '2026/09/15 15:36:00', tags: ['だれ'] },
-    { id: 'initial-2', textData: '男はウミガメのスープを飲み、その後死んでしまった', date: '2026/09/15 15:36:00', tags: ['なぜ'] },
-    { id: 'initial-3', textData: 'ナビエ=ストークス方程式', date: '2026/09/15 15:36:00', tags: ['とは'] },
-    { id: 'initial-4', textData: 'ンジャメナ', date: '2026/09/15 15:36:00', tags: ['どこ'] },
-    { id: 'initial-5', textData: 'ビールと発泡酒', date: '2026/09/15 15:36:00', tags: ['ちがい'] },
-    { id: 'initial-6', textData: '１０まんボルト', date: '2026/09/15 15:36:00', tags: ['方法'] },
+    { id: 'initial-1', textData: 'サトシ・ナカモト', date: '1970/01/01 00:00:00', tags: ['だれ'] },
+    { id: 'initial-2', textData: 'ンジャメナ', date: '1973/09/07 00:00:00', tags: ['どこ'] },
+    { id: 'initial-3', textData: '１０まんボルト', date: '1996/02/27 00:00:00', tags: ['方法'] },
+    { id: 'initial-4', textData: '男はウミガメのスープを飲み、その後死んでしまった', date: '2026/06/16 00:00:00', tags: ['なぜ'] },
+    { id: 'initial-5', textData: 'ビールと発泡酒', date: '2026/08/07 00:00:00', tags: ['ちがい'] },
+    { id: 'initial-6', textData: 'ナビエ=ストークス方程式', date: '2026/09/15 15:36:00', tags: ['とは'] },
   ]);
   const [text, setText] = useState('');
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
