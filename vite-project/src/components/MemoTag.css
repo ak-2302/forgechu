@@ -12,10 +12,10 @@
     color: var(--memotag-fg, #444444);
 }
 
-.memotag[data-tag="what"]  { --memotag-bg: #dbeafe; --memotag-fg: #1e40af; }
-.memotag[data-tag="how"]   { --memotag-bg: #dcfce7; --memotag-fg: #166534; }
-.memotag[data-tag="why"]   { --memotag-bg: #fee2e2; --memotag-fg: #9f1239; }
-.memotag[data-tag="when"]  { --memotag-bg: #ffedd5; --memotag-fg: #9a3412; }
-.memotag[data-tag="where"] { --memotag-bg: #cffafe; --memotag-fg: #155e75; }
-.memotag[data-tag="who"]   { --memotag-bg: #f3e8ff; --memotag-fg: #6b21a8; }
-.memotag[data-tag="which"] { --memotag-bg: #fef9c3; --memotag-fg: #854d0e; }
+[data-tag="what"]  { --memotag-bg: #dbeafe; --memotag-fg: #1e40af; }
+[data-tag="how"]   { --memotag-bg: #dcfce7; --memotag-fg: #166534; }
+[data-tag="why"]   { --memotag-bg: #fee2e2; --memotag-fg: #9f1239; }
+[data-tag="when"]  { --memotag-bg: #ffedd5; --memotag-fg: #9a3412; }
+[data-tag="where"] { --memotag-bg: #cffafe; --memotag-fg: #155e75; }
+[data-tag="who"]   { --memotag-bg: #f3e8ff; --memotag-fg: #6b21a8; }
+[data-tag="which"] { --memotag-bg: #fef9c3; --memotag-fg: #854d0e; }

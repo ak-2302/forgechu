@@ -1,7 +1,36 @@
+import { useRef, useState } from 'react';
 import './App.css';
 import MemoCard from './components/MemoCard';
+import { TAGS, TAG_KEY, type Tag } from './tags';
 
 function App() {
+  const [memos, setMemos] = useState<{ id: string; textData: string; date: string; tags: Tag[] }[]>([
+    { id: 'initial-1', textData: '天文学的苦痛のリスク', date: '2026/09/15 15:36:00', tags: ['とは'] },
+    { id: 'initial-2', textData: 'ナビエ=ストークス方程式', date: '2026/09/15 15:36:00', tags: ['とは'] },
+  ]);
+  const [text, setText] = useState('');
+  const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
+  const editorRef = useRef<HTMLDialogElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const openEditor = () => {
+    editorRef.current?.showModal();
+    inputRef.current?.focus();
+  };
+
+  const saveMemo = () => {
+    if (!text.trim()) return;
+    const now = new Date();
+    const pad = (value: number) => String(value).padStart(2, '0');
+    const date = `${now.getFullYear()}/${pad(now.getMonth() + 1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    setMemos(current => [
+      ...current,
+      { id: crypto.randomUUID(), textData: text.trim(), date, tags: selectedTag ? [selectedTag] : [] },
+    ]);
+    setText('');
+    setSelectedTag(null);
+    editorRef.current?.close();
+  };
 
   return (
     <>
@@ -15,59 +44,45 @@ function App() {
         />
       </div>
       <div id="memo-list">
-        <MemoCard
-          textData={"天文学的苦痛のリスク"}
-          date={"2026/09/15 15:36:00"}
-          tags={["とは"]}
-        ></MemoCard>
-        <MemoCard
-          textData={"ナビエ=ストークス方程式"}
-          date={"2026/09/15 15:36:00"}
-          tags={["とは"]}
-        ></MemoCard>
-        <MemoCard
-          textData={"帯分数"}
-          date={"2026/09/15 15:36:00"}
-          tags={["とは"]}
-        ></MemoCard>
-        <MemoCard
-          textData={"Self-Attention"}
-          date={"2026/09/15 15:36:00"}
-          tags={["とは"]}
-        ></MemoCard>
-        <MemoCard
-          textData={"二重飛び"}
-          date={"2026/09/15 15:36:00"}
-          tags={["方法"]}
-        ></MemoCard>
-        <MemoCard
-          textData={"人類の誕生"}
-          date={"2026/09/15 15:36:00"}
-          tags={["なぜ"]}
-        ></MemoCard>
-        <MemoCard
-          textData={"応仁の乱"}
-          date={"2026/09/15 15:36:00"}
-          tags={["いつ"]}
-        ></MemoCard>
-        <MemoCard
-          textData={"バチカン市国"}
-          date={"2026/09/15 15:36:00"}
-          tags={["どこ"]}
-        ></MemoCard>
-        <MemoCard
-          textData={"フォン・ノイマン"}
-          date={"2026/09/15 15:36:00"}
-          tags={["だれ"]}
-        ></MemoCard>
-        <MemoCard
-          textData={"「効率」と「効果」"}
-          date={"2026/09/15 15:36:00"}
-          tags={["ちがい"]}
-        ></MemoCard>
+        {memos.map(memo => (
+          <MemoCard key={memo.id} textData={memo.textData} date={memo.date} tags={memo.tags} />
+        ))}
       </div>
 
-      <button id="add-memo-button" type="button">メモ追加</button>
+      <button id="add-memo-button" type="button" onClick={openEditor}>+新しいメモを作成</button>
+
+      <dialog ref={editorRef} className="memo-editor" aria-label="メモを記入">
+        <form onSubmit={event => { event.preventDefault(); saveMemo(); }}>
+          <div className="memo-editor-top">
+            <textarea
+              ref={inputRef}
+              className="memo-editor-input"
+              aria-label="メモ本文"
+              placeholder="疑問をメモ…"
+              value={text}
+              onChange={event => setText(event.target.value)}
+              rows={4}
+            />
+            <button className="memo-save-button" type="submit" disabled={!text.trim()}>保存</button>
+          </div>
+          <fieldset className="question-tags">
+            <legend>疑問タグ（1つだけ選択できます）</legend>
+            <div className="question-tag-options">
+              {TAGS.map(tag => (
+                <button
+                  key={tag}
+                  type="button"
+                  className="question-tag-button"
+                  data-tag={TAG_KEY[tag]}
+                  aria-pressed={selectedTag === tag}
+                  onClick={() => setSelectedTag(tag)}
+                >#{tag}</button>
+              ))}
+            </div>
+          </fieldset>
+          <button className="memo-close-button" type="button" onClick={() => editorRef.current?.close()}>閉じる</button>
+        </form>
+      </dialog>
     </>
   );
 }
