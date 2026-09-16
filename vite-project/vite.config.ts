@@ -2,6 +2,7 @@ import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import { defineConfig } from 'vite'
 import { VitePWA } from "vite-plugin-pwa";
+import { cloudflare } from "@cloudflare/vite-plugin";
 
 
 // https://vite.dev/config/
@@ -10,6 +11,9 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] }),
     VitePWA({
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.ts",
       devOptions: { enabled: true },
       registerType: "autoUpdate",
       manifest: {
@@ -38,5 +42,6 @@ export default defineConfig({
         ],
       },
     }),
+    cloudflare(),
   ],
 });
