@@ -20,16 +20,19 @@ function App() {
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
   }, [memos]);
 
-  useEffect(() => {
+  const resizeInput = () => {
     const input = inputRef.current;
     if (!input) return;
     input.style.height = 'auto';
     input.style.height = `${input.scrollHeight}px`;
-  }, [text]);
+  };
+
+  useEffect(resizeInput, [text]);
 
   const openEditor = () => {
     if (editorRef.current?.open) return;
     editorRef.current?.showModal();
+    resizeInput();
     inputRef.current?.focus();
   };
 

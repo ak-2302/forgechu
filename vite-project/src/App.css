@@ -142,7 +142,7 @@ body:has(.memo-editor[open]) {
 .memo-save-button {
   flex-shrink: 0;
   border: 0;
-  background: #a6bddf;
+  background: #4170b5;
   color: #fff;
 }
 
@@ -177,6 +177,7 @@ body:has(.memo-editor[open]) {
 .memo-editor .question-tag-button {
   margin: 0;
   border: 0;
+  padding: 0.3rem 0.5rem;
   cursor: pointer;
 }
 
