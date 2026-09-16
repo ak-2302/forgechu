@@ -8,7 +8,7 @@
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #e5e5e5;
+  background-color: #eef2f8;
 }
 
 #header {
@@ -16,14 +16,12 @@
   top: 0;
   left: 0;
   right: 0;
+  z-index: 1;
   display: flex;
   align-items: center;
-  background-color: #f5f5f5;
   justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border);
-  padding-left: 1rem;
-  padding-right: 0.5rem;
+  background-color: #eef2f8;
+  padding: 0.6rem 1rem;
 }
 
 #body {
@@ -33,33 +31,40 @@
 
 #add-memo-button {
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 1.5rem;
+  left: 0.9rem;
+  right: 0.9rem;
+  bottom: 0;
   box-sizing: border-box;
-  width: 100%;
-  border: 1px solid #555;
-  border-radius: 0;
-  background-color: #f2f2f2;
-  color: #222;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  height: 5rem;
+  padding-top: 1.2rem;
+  border: 0;
+  border-radius: 22px 22px 0 0;
+  background-color: #fff;
+  color: #9ca3af;
+  font-size: 0.85rem;
   cursor: pointer;
-  height: 4em;
+  box-shadow: 0 -6px 18px rgb(31 42 68 / 8%);
 }
 
 #header > h1 {
-color: #111111;
-font-weight: 700;
+  margin: 0;
+  color: #24324a;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 #memo-list {
   box-sizing: border-box;
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 10px;
-  padding-bottom: 110px;
-  margin-top: 4em;
+  padding: 0.6rem;
+  padding-bottom: 7rem;
+  margin-top: 3.5rem;
 }
 
 body:has(.memo-editor[open]) {

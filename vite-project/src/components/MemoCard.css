@@ -1,29 +1,28 @@
-
-
 .memo-card {
     box-sizing: border-box;
-    border-radius: 10px;
+    border-radius: 12px;
     width: 100%;
     background-color: white;
-    padding: 1em;
-    overflow: contain;
-    margin-top: 0.3em;
+    padding: 0.8rem 1rem;
+    margin-top: 0.5rem;
 }
 .memo-text-row {
     display: flex;
+    align-items: center;
 }
 .memo-text {
+    min-width: 0;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
     text-align: left;
-    color: black;
-    display: block;
-    font-size: 2em;
-    line-height: 2em;
+    color: #1f2a37;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.6;
 }
 .memo-date {
-    color: gray;
-    font-size: 1em;
+    color: #9aa3b2;
+    font-size: 0.7rem;
     text-align: left;
 }

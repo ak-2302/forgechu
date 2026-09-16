@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import './App.css';
 import MemoCard from './components/MemoCard';
+import settings from './assets/settings.png';
 import { TAGS, TAG_KEY, type Tag } from './tags';
 
 function App() {
@@ -37,9 +38,9 @@ function App() {
       <div id="header">
         <h1>ぎもんNOTE</h1>
         <img
-          width="50"
-          height="50"
-          src="https://img.icons8.com/ios/50/settings--v1.png"
+          width="28"
+          height="28"
+          src={settings}
           alt="settings--v1"
         />
       </div>
