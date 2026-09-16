@@ -1,12 +1,12 @@
-import './App.css'
-import MemoCard from './components/MemoCard'
+import './App.css';
+import MemoCard from './components/MemoCard';
 
 function App() {
 
   return (
     <>
       <div id="header">
-        <h1>とりあえずメモ</h1>
+        <h1>ぎもんNOTE</h1>
         <img
           width="50"
           height="50"
