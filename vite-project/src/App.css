@@ -4,6 +4,7 @@
 }
 
 #root {
+  --sheet-peek: 5rem;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -38,7 +39,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  height: 5rem;
+  height: var(--sheet-peek);
   padding-top: 1.2rem;
   border: 0;
   border-radius: 22px 22px 0 0;
@@ -95,6 +96,10 @@ body:has(.memo-editor[open]) {
 
 .memo-editor::backdrop {
   background: rgb(0 0 0 / 40%);
+}
+
+.memo-editor[open]::backdrop {
+  animation: memo-fade-in 220ms ease-out;
 }
 
 .memo-editor-top {
@@ -187,10 +192,15 @@ body:has(.memo-editor[open]) {
 }
 
 @keyframes memo-slide-up {
-  from { transform: translateY(100%); }
+  from { transform: translateY(calc(100% - var(--sheet-peek))); }
   to { transform: translateY(0); }
 }
 
+@keyframes memo-fade-in {
+  from { opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .memo-editor[open] { animation: none; }
+  .memo-editor[open],
+  .memo-editor[open]::backdrop { animation: none; }
 }
