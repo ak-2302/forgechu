@@ -73,7 +73,7 @@ function App() {
                 <button
                   key={tag}
                   type="button"
-                  className="question-tag-button"
+                  className="memotag question-tag-button"
                   data-tag={TAG_KEY[tag]}
                   aria-pressed={selectedTag === tag}
                   onClick={() => setSelectedTag(tag)}
