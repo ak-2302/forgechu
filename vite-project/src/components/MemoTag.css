@@ -4,10 +4,40 @@
     font-size: 1em;
     line-height: 1em;
     border-radius: 20%;
-    background-color: lightblue;
-    color: gray;
+    background-color: var(--tag-background, #e5e7eb);
+    color: var(--tag-foreground, #374151);
     padding: 0.3em;
     height: 1em;
     margin: auto 0;
     margin-left: 10px;
+}
+
+[data-question-tag='とは'] {
+    --tag-background: #dbeafe;
+    --tag-foreground: #1e40af;
+}
+
+[data-question-tag='なぜ'] {
+    --tag-background: #fce7f3;
+    --tag-foreground: #9d174d;
+}
+
+[data-question-tag='方法'] {
+    --tag-background: #dcfce7;
+    --tag-foreground: #166534;
+}
+
+[data-question-tag='だれ'] {
+    --tag-background: #f3e8ff;
+    --tag-foreground: #6b21a8;
+}
+
+[data-question-tag='どこ'] {
+    --tag-background: #ffedd5;
+    --tag-foreground: #9a3412;
+}
+
+[data-question-tag='いつ'] {
+    --tag-background: #fef9c3;
+    --tag-foreground: #854d0e;
 }
