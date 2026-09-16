@@ -45,6 +45,26 @@ function App() {
           date={"2026/09/15 15:36:00"}
           tags={["なぜ"]}
         ></MemoCard>
+        <MemoCard
+          textData={"応仁の乱"}
+          date={"2026/09/15 15:36:00"}
+          tags={["いつ"]}
+        ></MemoCard>
+        <MemoCard
+          textData={"バチカン市国"}
+          date={"2026/09/15 15:36:00"}
+          tags={["どこ"]}
+        ></MemoCard>
+        <MemoCard
+          textData={"フォン・ノイマン"}
+          date={"2026/09/15 15:36:00"}
+          tags={["だれ"]}
+        ></MemoCard>
+        <MemoCard
+          textData={"「効率」と「効果」"}
+          date={"2026/09/15 15:36:00"}
+          tags={["ちがい"]}
+        ></MemoCard>
       </div>
 
       <button id="add-memo-button" type="button">メモ追加</button>
