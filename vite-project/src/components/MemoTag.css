@@ -1,13 +1,14 @@
 .memotag {
     display: block;
     margin: 0.3em;
-    font-size: 1em;
-    line-height: 1em;
-    border-radius: 20%;
+    font-size: 0.7rem;
+    line-height: 0.7rem;
+    border-radius: 25%;
     background-color: lightblue;
-    color: gray;
+    color: #444444;
     padding: 0.3em;
-    height: 1em;
+    height: 0.7rem;
     margin: auto 0;
     margin-left: 10px;
+    font-weight: 600;
 }

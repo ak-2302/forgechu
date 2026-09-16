@@ -5,9 +5,10 @@
     border-radius: 10px;
     width: 100%;
     background-color: white;
-    padding: 1em;
+    padding: 1rem;
     overflow: contain;
-    margin-top: 0.3em;
+    border: 1px solid var(--border);
+    margin-top: 0.5rem;
 }
 .memo-text-row {
     display: flex;
@@ -17,13 +18,12 @@
     overflow: hidden;
     white-space: nowrap;
     text-align: left;
-    color: black;
     display: block;
-    font-size: 2em;
-    line-height: 2em;
+    font-size: 1.4rem;
+    line-height: 1.4rem;
 }
 .memo-date {
     color: gray;
-    font-size: 1em;
+    font-size: 0.8rem;
     text-align: left;
 }
