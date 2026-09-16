@@ -1,10 +1,11 @@
 import "./MemoCard.css";
 import MemoTag from "./MemoTag";
+import type { Tag } from "../tags";
 
 const MemoCard = (props: {
   textData: string;
   date: string;
-  tags: string[];
+  tags: Tag[];
 }) => {
   return (
     <div className="memo-card">

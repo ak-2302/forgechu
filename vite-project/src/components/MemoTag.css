@@ -1,43 +1,21 @@
 .memotag {
-    display: block;
-    margin: 0.3em;
-    font-size: 1em;
-    line-height: 1em;
-    border-radius: 20%;
-    background-color: var(--tag-background, #e5e7eb);
-    color: var(--tag-foreground, #374151);
-    padding: 0.3em;
-    height: 1em;
-    margin: auto 0;
+    flex: none;
+    align-self: center;
     margin-left: 10px;
+    padding: 0.3em 0.7em;
+    border-radius: 6px;
+    font-size: 1em;
+    line-height: 1.2;
+    font-weight: 700;
+    white-space: nowrap;
+    background-color: var(--memotag-bg, #e5e5e5);
+    color: var(--memotag-fg, #444444);
 }
 
-[data-question-tag='とは'] {
-    --tag-background: #dbeafe;
-    --tag-foreground: #1e40af;
-}
-
-[data-question-tag='なぜ'] {
-    --tag-background: #fce7f3;
-    --tag-foreground: #9d174d;
-}
-
-[data-question-tag='方法'] {
-    --tag-background: #dcfce7;
-    --tag-foreground: #166534;
-}
-
-[data-question-tag='だれ'] {
-    --tag-background: #f3e8ff;
-    --tag-foreground: #6b21a8;
-}
-
-[data-question-tag='どこ'] {
-    --tag-background: #ffedd5;
-    --tag-foreground: #9a3412;
-}
-
-[data-question-tag='いつ'] {
-    --tag-background: #fef9c3;
-    --tag-foreground: #854d0e;
-}
+[data-tag="what"]  { --memotag-bg: #dbeafe; --memotag-fg: #1e40af; }
+[data-tag="how"]   { --memotag-bg: #dcfce7; --memotag-fg: #166534; }
+[data-tag="why"]   { --memotag-bg: #fee2e2; --memotag-fg: #9f1239; }
+[data-tag="when"]  { --memotag-bg: #ffedd5; --memotag-fg: #9a3412; }
+[data-tag="where"] { --memotag-bg: #cffafe; --memotag-fg: #155e75; }
+[data-tag="who"]   { --memotag-bg: #f3e8ff; --memotag-fg: #6b21a8; }
+[data-tag="which"] { --memotag-bg: #fef9c3; --memotag-fg: #854d0e; }

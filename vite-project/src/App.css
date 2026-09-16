@@ -155,12 +155,13 @@ body:has(.memo-editor[open]) {
 }
 
 .question-tag-button {
-  background: var(--tag-background, #e5e7eb);
-  color: var(--tag-foreground, #374151);
+  background: var(--memotag-bg, #e5e5e5);
+  color: var(--memotag-fg, #444444);
+  font-weight: 700;
 }
 
 .question-tag-button[aria-pressed='true'] {
-  background: var(--tag-foreground, #374151);
+  background: var(--memotag-fg, #444444);
   color: #fff;
   box-shadow: inset 0 0 0 2px #fff;
 }

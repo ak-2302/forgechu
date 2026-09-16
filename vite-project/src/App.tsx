@@ -1,16 +1,15 @@
 import { useRef, useState } from 'react';
 import './App.css';
 import MemoCard from './components/MemoCard';
-
-const questionTags = ['とは', 'なぜ', '方法' ,'だれ', 'どこ' ,'いつ'];
+import { TAGS, TAG_KEY, type Tag } from './tags';
 
 function App() {
-  const [memos, setMemos] = useState([
+  const [memos, setMemos] = useState<{ id: string; textData: string; date: string; tags: Tag[] }[]>([
     { id: 'initial-1', textData: '天文学的苦痛のリスク', date: '2026/09/15 15:36:00', tags: ['とは'] },
     { id: 'initial-2', textData: 'ナビエ=ストークス方程式', date: '2026/09/15 15:36:00', tags: ['とは'] },
   ]);
   const [text, setText] = useState('');
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
   const editorRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -69,12 +68,12 @@ function App() {
           <fieldset className="question-tags">
             <legend>疑問タグ（1つだけ選択できます）</legend>
             <div className="question-tag-options">
-              {questionTags.map(tag => (
+              {TAGS.map(tag => (
                 <button
                   key={tag}
                   type="button"
                   className="question-tag-button"
-                  data-question-tag={tag}
+                  data-tag={TAG_KEY[tag]}
                   aria-pressed={selectedTag === tag}
                   onClick={() => setSelectedTag(tag)}
                 >#{tag}</button>
