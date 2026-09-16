@@ -6,6 +6,7 @@ self.addEventListener('push', (event) => {
     body: payload.body,
     icon: payload.icon,
   }))
+  console.log("pushed")
 })
 
 self.addEventListener('notificationclick', (event) => {
