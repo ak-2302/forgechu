@@ -5,6 +5,8 @@ enPiT2026夏 チーム開発課題
 
 # デプロイについて
 ## [デプロイ先](https://forgechu.pages.dev/)
+cloudflare pagesを使用しています。
+[わたし](https://github.com/ak−2302)の個人アカウントで管理してます。
 キャッシュ設定でうまく動作しない・過去バージョンが更新されない場合は、[こちら](https://forgechu.pages.dev/?  )
 ## デプロイ設定
 - mainブランチを自動でデプロイします。
