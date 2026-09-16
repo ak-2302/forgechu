@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type TouchEvent } from 'react';
 import './App.css';
 import MemoCard from './components/MemoCard';
 import settings from './assets/settings.png';
@@ -14,9 +14,24 @@ function App() {
   const editorRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const startYRef = useRef<number | null>(null);
+
   const openEditor = () => {
+    if (editorRef.current?.open) return;
     editorRef.current?.showModal();
     inputRef.current?.focus();
+  };
+
+  const startSwipe = (event: TouchEvent) => {
+    startYRef.current = event.touches[0].clientY;
+  };
+
+  const trackSwipe = (event: TouchEvent) => {
+    if (startYRef.current === null) return;
+    if (startYRef.current - event.touches[0].clientY > 30) {
+      startYRef.current = null;
+      openEditor();
+    }
   };
 
   const saveMemo = () => {
@@ -50,7 +65,13 @@ function App() {
         ))}
       </div>
 
-      <button id="add-memo-button" type="button" onClick={openEditor}>+新しいメモを作成</button>
+      <button
+        id="add-memo-button"
+        type="button"
+        onClick={openEditor}
+        onTouchStart={startSwipe}
+        onTouchMove={trackSwipe}
+      >+新しいメモを作成</button>
 
       <dialog ref={editorRef} className="memo-editor" aria-label="メモを記入">
         <form onSubmit={event => { event.preventDefault(); saveMemo(); }}>
