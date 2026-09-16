@@ -70,6 +70,11 @@ function App() {
     }
   };
 
+  const toggleTag = (tag: Tag) => {
+    setSelectedTag(current => current === tag ? null : tag);
+    inputRef.current?.focus();
+  };
+
   const saveMemo = () => {
     if (!text.trim()) return;
     const now = new Date();
@@ -133,7 +138,8 @@ function App() {
                   className="memotag question-tag-button"
                   data-tag={TAG_KEY[tag]}
                   aria-pressed={selectedTag === tag}
-                  onClick={() => setSelectedTag(current => current === tag ? null : tag)}
+                  onPointerDown={event => event.preventDefault()}
+                  onClick={() => toggleTag(tag)}
                 >#{tag}</button>
               ))}
             </div>
