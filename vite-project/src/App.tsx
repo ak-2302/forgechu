@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState, type TouchEvent } from 'react';
 import './App.css';
 import MemoCard from './components/MemoCard';
+import settings from './assets/settings.png';
 import { TAGS, TAG_KEY, type Tag } from './tags';
 
 function App() {
@@ -13,9 +14,38 @@ function App() {
   const editorRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const startYRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+  }, [memos]);
+
+  const resizeInput = () => {
+    const input = inputRef.current;
+    if (!input) return;
+    input.style.height = 'auto';
+    input.style.height = `${input.scrollHeight}px`;
+  };
+
+  useEffect(resizeInput, [text]);
+
   const openEditor = () => {
+    if (editorRef.current?.open) return;
     editorRef.current?.showModal();
+    resizeInput();
     inputRef.current?.focus();
+  };
+
+  const startSwipe = (event: TouchEvent) => {
+    startYRef.current = event.touches[0].clientY;
+  };
+
+  const trackSwipe = (event: TouchEvent) => {
+    if (startYRef.current === null) return;
+    if (startYRef.current - event.touches[0].clientY > 30) {
+      startYRef.current = null;
+      openEditor();
+    }
   };
 
   const saveMemo = () => {
@@ -37,9 +67,9 @@ function App() {
       <div id="header">
         <h1>ぎもんNOTE</h1>
         <img
-          width="50"
-          height="50"
-          src="https://img.icons8.com/ios/50/settings--v1.png"
+          width="28"
+          height="28"
+          src={settings}
           alt="settings--v1"
           style={{ cursor: 'pointer', display: 'none' }}
         />
@@ -50,7 +80,13 @@ function App() {
         ))}
       </div>
 
-      <button id="add-memo-button" type="button" onClick={openEditor}>+新しいメモを作成</button>
+      <button
+        id="add-memo-button"
+        type="button"
+        onClick={openEditor}
+        onTouchStart={startSwipe}
+        onTouchMove={trackSwipe}
+      >+新しいメモを作成</button>
 
       <dialog ref={editorRef} className="memo-editor" aria-label="メモを記入">
         <form onSubmit={event => { event.preventDefault(); saveMemo(); }}>
@@ -62,7 +98,7 @@ function App() {
               placeholder="疑問をメモ…"
               value={text}
               onChange={event => setText(event.target.value)}
-              rows={4}
+              rows={1}
             />
             <button className="memo-save-button" type="submit" disabled={!text.trim()}>保存</button>
           </div>
@@ -73,7 +109,7 @@ function App() {
                 <button
                   key={tag}
                   type="button"
-                  className="question-tag-button"
+                  className="memotag question-tag-button"
                   data-tag={TAG_KEY[tag]}
                   aria-pressed={selectedTag === tag}
                   onClick={() => setSelectedTag(tag)}

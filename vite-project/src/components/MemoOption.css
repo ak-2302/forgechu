@@ -1,7 +1,8 @@
 .memo-option {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
   z-index: 1;
 }
 
@@ -9,12 +10,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2rem;
+  height: 2rem;
   border: 0;
   border-radius: 50%;
   padding: 0;
-  color: inherit;
+  color: #9aa3b2;
   background: transparent;
   cursor: pointer;
 }
@@ -35,31 +36,34 @@
 }
 
 .memo-option-trigger:hover,
-.memo-option-trigger:focus-visible { background: var(--accent-bg); outline: none; }
+.memo-option-trigger:focus-visible { background: #eef2f8; outline: none; }
 
 .memo-option-menu {
   position: absolute;
-  top: 2.25rem;
+  top: 2.2rem;
   right: 0;
   display: grid;
-  min-width: 9rem;
+  min-width: 8rem;
   padding: 0.25rem;
-  border: 1px solid var(--border);
-  border-radius: 0.5rem;
-  background: var(--bg);
-  box-shadow: var(--shadow);
+  border: 1px solid #e3e8f0;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgb(31 42 68 / 12%);
 }
 
 .memo-option-menu button {
   border: 0;
+  border-radius: 8px;
   padding: 0.6rem 0.75rem;
-  color: var(--text-h);
+  color: #4b5563;
   background: transparent;
+  font: inherit;
+  font-size: 0.85rem;
   text-align: left;
   cursor: pointer;
 }
 
 .memo-option-menu button:hover,
-.memo-option-menu button:focus-visible { background: var(--accent-bg); outline: none; }
+.memo-option-menu button:focus-visible { background: #eef2f8; outline: none; }
 
-.memo-option-delete-button { color: #b42318 !important; }
+.memo-option-menu .memo-option-delete-button { color: #b42318; }
