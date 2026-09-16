@@ -13,8 +13,8 @@ export default defineConfig({
       devOptions: { enabled: true },
       registerType: "autoUpdate",
       manifest: {
-        name: "とりあえずメモ",
-        short_name: "とりメモ",
+        name: "ぎもんNOTE",
+        short_name: "ぎもんNOTE",
         description: "調べたいことを気軽にメモしてリマインダー",
         icons: [
           {

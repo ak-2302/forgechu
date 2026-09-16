@@ -1,15 +1,18 @@
 .memo-card {
+    position: relative;
     box-sizing: border-box;
     border-radius: 12px;
     width: 100%;
     background-color: white;
-    padding: 0.8rem 1rem;
+    padding: 0.8rem 2.6rem 0.8rem 1rem;
     margin-top: 0.5rem;
 }
+
 .memo-text-row {
     display: flex;
     align-items: center;
 }
+
 .memo-text {
     min-width: 0;
     text-overflow: ellipsis;
@@ -21,6 +24,7 @@
     font-weight: 700;
     line-height: 1.6;
 }
+
 .memo-date {
     color: #9aa3b2;
     font-size: 0.7rem;

@@ -71,11 +71,12 @@ function App() {
           height="28"
           src={settings}
           alt="settings--v1"
+          style={{ cursor: 'pointer', display: 'none' }}
         />
       </div>
       <div id="memo-list">
         {memos.map(memo => (
-          <MemoCard key={memo.id} textData={memo.textData} date={memo.date} tags={memo.tags} />
+          <MemoCard key={memo.id} textData={memo.textData} date={memo.date} tags={memo.tags} onDelete={() => setMemos(current => current.filter(item => item.id !== memo.id))} />
         ))}
       </div>
 
