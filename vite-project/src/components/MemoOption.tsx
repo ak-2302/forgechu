@@ -1,5 +1,5 @@
-import "./MemoOption.css";
 import { useEffect, useRef, useState } from "react";
+import "./MemoOption.css";
 
 type MemoOptionProps = { onEdit?: () => void; onDelete?: () => void };
 
@@ -42,7 +42,7 @@ const MemoOption = ({ onEdit, onDelete }: MemoOptionProps) => {
                 </span>
             </button>
             {isOpen && <div className="memo-option-menu" role="menu">
-                <button className="memo-option-edit-button" type="button" role="menuitem" onClick={() => { onEdit?.(); closeMenu(); }}>メモを編集</button>
+                {/* <button className="memo-option-edit-button" type="button" role="menuitem" onClick={() => { onEdit?.(); closeMenu(); }}>メモを編集</button> */}
                 <button className="memo-option-delete-button" type="button" role="menuitem" onClick={requestDelete}>メモを削除</button>
             </div>}
         </div>
