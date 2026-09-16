@@ -12,7 +12,7 @@ const MemoCard = (props: {
         <p className="memo-text">{props.textData}</p>
         <>
           {props.tags.map(tagging => (
-            <MemoTag tag={ tagging }></MemoTag>
+            <MemoTag key={tagging} tag={ tagging }></MemoTag>
           ))}
         </>
       </div>
