@@ -1,4 +1,4 @@
-import { useRef, useState, type TouchEvent } from 'react';
+import { useEffect, useRef, useState, type TouchEvent } from 'react';
 import './App.css';
 import MemoCard from './components/MemoCard';
 import settings from './assets/settings.png';
@@ -15,6 +15,10 @@ function App() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const startYRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+  }, [memos]);
 
   const openEditor = () => {
     if (editorRef.current?.open) return;
