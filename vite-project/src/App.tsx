@@ -141,24 +141,26 @@ function App() {
               onChange={event => setText(event.target.value)}
               rows={1}
             />
+          </div>
+          <div className="memo-editor-bottom">
+            <fieldset className="question-tags">
+              <legend>疑問タグ（1つだけ選択できます）</legend>
+              <div className="question-tag-options">
+                {TAGS.map(tag => (
+                  <button
+                    key={tag}
+                    type="button"
+                    className="memotag question-tag-button"
+                    data-tag={TAG_KEY[tag]}
+                    aria-pressed={selectedTag === tag}
+                    onPointerDown={event => event.preventDefault()}
+                    onClick={() => toggleTag(tag)}
+                  >#{tag}</button>
+                ))}
+              </div>
+            </fieldset>
             <button className="memo-save-button" type="submit" disabled={!text.trim()}>保存</button>
           </div>
-          <fieldset className="question-tags">
-            <legend>疑問タグ（1つだけ選択できます）</legend>
-            <div className="question-tag-options">
-              {TAGS.map(tag => (
-                <button
-                  key={tag}
-                  type="button"
-                  className="memotag question-tag-button"
-                  data-tag={TAG_KEY[tag]}
-                  aria-pressed={selectedTag === tag}
-                  onPointerDown={event => event.preventDefault()}
-                  onClick={() => toggleTag(tag)}
-                >#{tag}</button>
-              ))}
-            </div>
-          </fieldset>
         </form>
       </section>
     </>
