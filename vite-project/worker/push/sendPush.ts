@@ -29,7 +29,10 @@ SELECT endpoint, p256dh, auth FROM push_subscriptions WHERE user_id = ?`,
     },
   };
   const message: PushMessage = {
-    data: "aaa"
+    data: JSON.stringify({
+      title,
+      body,
+    }),
   };
   const vapidKeys: VapidKeys = {
     publicKey: env.VAPID_PUBLIC_KEY,

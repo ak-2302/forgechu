@@ -35,7 +35,6 @@ export default {
     return new Response("Not Found", { status: 404 });
   },
   async scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext){
-    console.log("aaa")
     ctx.waitUntil(
         processDueReminders(env)
     )

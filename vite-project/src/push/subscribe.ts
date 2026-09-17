@@ -10,10 +10,12 @@ export function getUserId(): string {
 }   
 
 export async function subscribePush() {
+    console.log("subscribePush called");
 
     const response = await fetch("/api/push/vapid_public_key");
     const data = await response.json();
     const applicationServerKey = data.publicKey;
+    console.log("VAPID public key:", applicationServerKey);
 
     const permission = await Notification.requestPermission();
     if (permission !== "granted") {
