@@ -1,4 +1,5 @@
-import { useId, useRef, useState } from "react";
+import { Fragment, useId, useRef, useState } from "react";
+import { shortenSentence } from "../search/compare";
 import type { AnswerFact, MemoSearch, SelectedArticle, TagAnswer, WikipediaArticle, WikipediaFound } from "../search/types";
 import "./SearchResult.css";
 
@@ -49,11 +50,77 @@ const FactList = (props: { facts: AnswerFact[] }) => (
   </dl>
 );
 
+const MentionList = (props: { mention: Extract<TagAnswer, { kind: "comparison" }>["mentions"][number] }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const listId = useId();
+  const { mention } = props;
+
+  return (
+    <>
+      <p className="search-result-label">{mention.from}の記事で「{mention.about}」に触れている文</p>
+      <ul className="search-result-sentences" id={listId}>
+        {mention.sentences.map((sentence, index) => (
+          <li key={`${index}-${sentence.text}`} hidden={index > 0 && !isExpanded}>
+            {shortenSentence(sentence.text)}
+            <span className="search-result-sentence-heading">（{sentence.heading === "" ? "冒頭" : `「${sentence.heading}」の章`}）</span>
+          </li>
+        ))}
+      </ul>
+      {mention.sentences.length > 1 && (
+        <button className="search-result-expand" type="button" aria-expanded={isExpanded} aria-controls={listId} onClick={() => setIsExpanded(current => !current)}>
+          {isExpanded ? "閉じる" : "もっと見る"}
+        </button>
+      )}
+    </>
+  );
+};
+
+const Comparison = (props: { answer: Extract<TagAnswer, { kind: "comparison" }> }) => {
+  const { titles, mentions, sections, facts } = props.answer;
+
+  return (
+    <div className="search-result-answer">
+      <p className="search-result-comparison-title">「{titles[0]}」と「{titles[1]}」のちがい</p>
+      {mentions.map(mention => <MentionList key={mention.from} mention={mention} />)}
+      {sections.map(section => (
+        <Fragment key={section.article}>
+          <p className="search-result-label">「{section.heading}」の章より（{section.article}）</p>
+          <p className="search-result-summary">{section.sentences.join("\n")}</p>
+        </Fragment>
+      ))}
+      {facts.length > 0 && (
+        <table className="search-result-comparison-table">
+          <thead>
+            <tr>
+              <th scope="col">項目</th>
+              <th scope="col">{titles[0]}</th>
+              <th scope="col">{titles[1]}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {facts.map(fact => (
+              <tr key={fact.label}>
+                <th scope="row">{fact.label}</th>
+                <td>{fact.values[0] ?? "—"}</td>
+                <td>{fact.values[1] ?? "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+};
+
 const Answer = (props: { answer: TagAnswer; summary: string | null }) => {
   const { answer } = props;
 
   if (answer.kind === "unreadable") {
-    return <p className="search-result-status search-result-answer">この記事から{answer.topic}は読み取れませんでした。</p>;
+    return <p className="search-result-status search-result-answer">{answer.topic === "違い" ? "これらの記事" : "この記事"}から{answer.topic}は読み取れませんでした。</p>;
+  }
+
+  if (answer.kind === "comparison") {
+    return <Comparison answer={answer} />;
   }
 
   if (answer.kind === "section") {
@@ -103,7 +170,10 @@ const Answer = (props: { answer: TagAnswer; summary: string | null }) => {
 };
 
 const FoundView = (props: { result: WikipediaFound; answer: TagAnswer | null; summary: string | null; onSelect: (candidate: WikipediaArticle) => void }) => {
-  const { articles, candidates, disambiguation } = props.result;
+  const { candidates, disambiguation } = props.result;
+  const articles = props.result.articles.filter((article, index, all) => all.findIndex(other => other.url === article.url) === index);
+  const [isIntroOpen, setIsIntroOpen] = useState(false);
+  const introId = useId();
 
   if (disambiguation) {
     return (
@@ -120,12 +190,20 @@ const FoundView = (props: { result: WikipediaFound; answer: TagAnswer | null; su
     : excerpt(articles[0].extract);
 
   const introSummary = props.answer?.kind === "section" ? null : props.summary;
+  const isIntroCollapsible = props.answer?.kind === "comparison";
 
   return (
     <>
       {props.answer && <Answer answer={props.answer} summary={props.summary} />}
-      {props.answer && props.answer.kind !== "unreadable" && <p className="search-result-label">記事の冒頭</p>}
-      <p className="search-result-summary">{introSummary ?? fallback}</p>
+      {isIntroCollapsible && (
+        <button className="search-result-expand" type="button" aria-expanded={isIntroOpen} aria-controls={introId} onClick={() => setIsIntroOpen(current => !current)}>
+          {isIntroOpen ? "各記事の冒頭を閉じる" : "各記事の冒頭を見る"}
+        </button>
+      )}
+      <div id={introId} hidden={isIntroCollapsible && !isIntroOpen}>
+        {props.answer && props.answer.kind !== "unreadable" && <p className="search-result-label">{articles.length > 1 ? "各記事の冒頭" : "記事の冒頭"}</p>}
+        <p className="search-result-summary">{introSummary ?? fallback}</p>
+      </div>
       <Source articles={articles} />
       {candidates.length > 0 && (
         <>

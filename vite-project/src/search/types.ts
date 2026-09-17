@@ -23,12 +23,24 @@ export type AnswerSection = {
   sentences: string[];
 };
 
-export type AnswerTopic = "時期" | "場所" | "人物" | "方法" | "理由";
+export type AnswerTopic = "時期" | "場所" | "人物" | "方法" | "理由" | "違い";
+
+export type ComparisonSentence = {
+  heading: string;
+  text: string;
+};
 
 export type TagAnswer =
   | { kind: "facts"; facts: AnswerFact[]; description?: string }
   | { kind: "place"; facts: AnswerFact[]; mapUrl?: string; section?: AnswerSection }
   | { kind: "section"; heading: string; sentences: string[]; steps?: { heading: string; sentence: string }[] }
+  | {
+      kind: "comparison";
+      titles: [string, string];
+      mentions: { from: string; about: string; sentences: ComparisonSentence[] }[];
+      sections: { article: string; heading: string; sentences: string[] }[];
+      facts: { label: string; values: [string | null, string | null] }[];
+    }
   | { kind: "unreadable"; topic: AnswerTopic };
 
 export type SelectedArticle =

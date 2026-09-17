@@ -1,4 +1,5 @@
 import type { Tag } from "../tags";
+import { buildComparison } from "./compare";
 import { findSection, parseSections, splitSentences, type Section } from "./sections";
 import type { AnswerFact, AnswerSection, TagAnswer, WikipediaArticle, WikipediaResult } from "./types";
 import { coordinateOf, entityIdsOf, fetchClaims, fetchLabels, isUnknown, timesOf, type Claims } from "./wikidata";
@@ -125,8 +126,13 @@ const buildAnswer = (article: WikipediaArticle, tag: Tag | null): Promise<TagAns
 };
 
 export const answerFor = async (result: WikipediaResult, tag: Tag | null) => {
-  if (result.status !== "found" || result.disambiguation || result.articles.length !== 1) return null;
+  if (result.status !== "found" || result.disambiguation) return null;
   try {
+    if (tag === "ちがい" && result.articles.length === 2) {
+      const [first, second] = result.articles;
+      return first.title === second.title ? null : await buildComparison(first, second);
+    }
+    if (result.articles.length !== 1) return null;
     return await buildAnswer(result.articles[0], tag);
   } catch {
     return null;

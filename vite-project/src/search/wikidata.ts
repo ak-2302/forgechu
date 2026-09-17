@@ -3,12 +3,15 @@ import { fetchApi } from "./wikipedia";
 type DataValue =
   | { type: "wikibase-entityid"; value: { id: string } }
   | { type: "time"; value: { time: string; precision: number } }
-  | { type: "globecoordinate"; value: { latitude: number; longitude: number } };
+  | { type: "globecoordinate"; value: { latitude: number; longitude: number } }
+  | { type: "quantity"; value: { amount: string } };
+
+type Snak = { snaktype: "value" | "somevalue" | "novalue"; datavalue?: DataValue };
 
 type Statement = {
   rank: "preferred" | "normal" | "deprecated";
-  mainsnak: { snaktype: "value" | "somevalue" | "novalue"; datavalue?: DataValue };
-  qualifiers?: Record<string, unknown[]>;
+  mainsnak: Snak;
+  qualifiers?: Record<string, Snak[]>;
 };
 
 export type Claims = Record<string, Statement[]>;
@@ -20,10 +23,21 @@ type EntitiesResponse = {
 const API_URL = "https://www.wikidata.org/w/api.php";
 const MAX_IDS = 50;
 const TIME_PATTERN = /^([+-])(\d+)-(\d{2})-(\d{2})/;
+const YEAR_PRECISION = 9;
+const numberFormat = new Intl.NumberFormat("ja-JP");
 
 export const fetchClaims = async (id: string) => {
   const data = await fetchApi<EntitiesResponse>(API_URL, { action: "wbgetentities", ids: id, props: "claims", languages: "ja" });
   return data?.entities?.[id]?.claims ?? null;
+};
+
+export const fetchClaimsFor = async (ids: string[]): Promise<Record<string, Claims>> => {
+  const unique = [...new Set(ids)].slice(0, MAX_IDS);
+  if (unique.length === 0) return {};
+  const data = await fetchApi<EntitiesResponse>(API_URL, { action: "wbgetentities", ids: unique.join("|"), props: "claims", languages: "ja" });
+  return Object.fromEntries(
+    Object.entries(data?.entities ?? {}).flatMap(([id, entity]) => entity.claims ? [[id, entity.claims]] : []),
+  );
 };
 
 export const fetchLabels = async (ids: string[]): Promise<Record<string, string>> => {
@@ -76,3 +90,12 @@ export const coordinateOf = (claims: Claims) => valuesOf(claims, "P625").flatMap
 export const isUnknown = (claims: Claims, property: string) => bestStatements(claims, property).some(statement =>
   statement.mainsnak.snaktype === "somevalue",
 );
+
+export const quantitiesOf = (claims: Claims, property: string) => bestStatements(claims, property).flatMap(statement => {
+  const value = statement.mainsnak.snaktype === "value" ? statement.mainsnak.datavalue : undefined;
+  if (value?.type !== "quantity") return [];
+  const amount = numberFormat.format(Number(value.value.amount));
+  const point = statement.qualifiers?.P585?.find(qualifier => qualifier.snaktype === "value")?.datavalue;
+  const year = point?.type === "time" ? formatTime(point.value.time, Math.min(point.value.precision, YEAR_PRECISION)) : null;
+  return [year ? `${amount}（${year}）` : amount];
+});

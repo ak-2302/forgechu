@@ -179,6 +179,69 @@
     font-weight: 700;
 }
 
+.search-result-comparison-title {
+    font-weight: 700;
+}
+
+.search-result-sentences {
+    margin: 0.2rem 0 0;
+    padding-left: 1.2rem;
+}
+
+.search-result-sentence-heading {
+    color: #52647c;
+    font-size: 0.75rem;
+}
+
+.search-result-comparison-table {
+    width: 100%;
+    margin-top: 0.4rem;
+    border-collapse: collapse;
+}
+
+.search-result-comparison-table th,
+.search-result-comparison-table td {
+    padding: 0.2rem 0.4rem;
+    border-bottom: 1px solid #fff;
+    text-align: left;
+    vertical-align: top;
+}
+
+.search-result-comparison-table th {
+    color: #52647c;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.search-result-comparison-table tbody th {
+    white-space: nowrap;
+}
+
+.search-result-expand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-left: -0.5rem;
+    padding: 0 0.5rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #52647c;
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.search-result-expand:hover {
+    background: #fff;
+}
+
+.search-result-expand:focus-visible {
+    outline: 2px solid #4170b5;
+    outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .search-result-chevron { transition: none; }
 }
