@@ -17,12 +17,12 @@ const SearchModeToggle = (props: { value: SearchMode; onChange: (value: SearchMo
     <button
       className="search-mode-toggle-button"
       type="button"
-      aria-label="あとで調べる"
+      aria-label="後で調べる"
       aria-pressed={props.value === "later"}
       onPointerDown={event => event.preventDefault()}
       onClick={() => props.onChange("later")}
     >
-      あとで<span className="search-mode-toggle-suffix">調べる</span>
+      後で<span className="search-mode-toggle-suffix">調べる</span>
     </button>
   </div>
 );

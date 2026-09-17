@@ -10,13 +10,13 @@ import { fetchArticle, searchWikipedia } from './search/wikipedia';
 import { TAGS, TAG_KEY, type Tag } from './tags';
 
 function App() {
-  const [memos, setMemos] = useState<{ id: string; textData: string; date: string; tags: Tag[]; searchMode?: SearchMode; search?: MemoSearch }[]>([
-    { id: 'initial-1', textData: 'サトシ・ナカモト', date: '1970/01/01 00:00:00', tags: ['だれ'] },
-    { id: 'initial-2', textData: 'ンジャメナ', date: '1973/09/07 00:00:00', tags: ['どこ'] },
-    { id: 'initial-3', textData: '１０まんボルト', date: '1996/02/27 00:00:00', tags: ['方法'] },
-    { id: 'initial-4', textData: '男はウミガメのスープを飲み、その後死んでしまった', date: '2026/06/16 00:00:00', tags: ['なぜ'] },
-    { id: 'initial-5', textData: 'ビールと発泡酒', date: '2026/08/07 00:00:00', tags: ['ちがい'] },
-    { id: 'initial-6', textData: 'ナビエ=ストークス方程式', date: '2026/09/15 15:36:00', tags: ['とは'] },
+  const [memos, setMemos] = useState<{ id: string; textData: string; date: string; tags: Tag[]; searchMode: SearchMode; search?: MemoSearch }[]>([
+    { id: 'initial-1', textData: '永瀬美穂', date: '1970/01/01 00:00:00', tags: ['だれ'], searchMode: 'now' },
+    { id: 'initial-2', textData: 'ンジャメナ', date: '1973/09/07 00:00:00', tags: ['どこ'], searchMode: 'later' },
+    { id: 'initial-3', textData: '１０まんボルト', date: '1996/02/27 00:00:00', tags: ['方法'], searchMode: 'now' },
+    { id: 'initial-4', textData: '男はウミガメのスープを飲み、その後死んでしまった', date: '2026/06/16 00:00:00', tags: ['なぜ'], searchMode: 'later' },
+    { id: 'initial-5', textData: 'ビールと発泡酒', date: '2026/08/07 00:00:00', tags: ['ちがい'], searchMode: 'now' },
+    { id: 'initial-6', textData: 'ナビエ=ストークス方程式', date: '2026/09/15 15:36:00', tags: ['とは'], searchMode: 'later' },
   ]);
   const [text, setText] = useState('');
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
@@ -24,11 +24,12 @@ function App() {
   const [isEditorOpen, setIsEditorOpen] = useState(true);
   const editorRef = useRef<HTMLElement>(null);
   const settingsRef = useRef<HTMLDialogElement>(null);
-  const [editingMemo, setEditingMemo] = useState<{ id: string; text: string; tag: Tag | null } | null>(null);
+  const [editingMemo, setEditingMemo] = useState<{ id: string; text: string; tag: Tag | null; searchMode: SearchMode } | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const editorText = editingMemo ? editingMemo.text : text;
   const editorTag = editingMemo ? editingMemo.tag : selectedTag;
+  const editorSearchMode = editingMemo ? editingMemo.searchMode : searchMode;
 
   const startYRef = useRef<number | null>(null);
 
@@ -97,6 +98,7 @@ function App() {
 
   const changeSearchMode = (mode: SearchMode) => {
     if (!isEditorOpen) return;
+    if (editingMemo) setEditingMemo({ ...editingMemo, searchMode: mode });
     setSearchMode(mode);
     inputRef.current?.focus();
   };
@@ -143,9 +145,22 @@ function App() {
   const saveMemo = () => {
     if (!editorText.trim()) return;
     if (editingMemo) {
+      const updatedText = editingMemo.text.trim();
+      const updatedMemo = {
+        textData: updatedText,
+        tags: editingMemo.tag ? [editingMemo.tag] : [],
+        searchMode: editingMemo.searchMode,
+      };
       setMemos(current => current.map(memo => memo.id === editingMemo.id
-        ? { ...memo, textData: editingMemo.text.trim(), tags: editingMemo.tag ? [editingMemo.tag] : [] }
+        ? {
+          ...memo,
+          ...updatedMemo,
+          search: editingMemo.searchMode === 'now' ? { status: 'loading' } : undefined,
+        }
         : memo));
+      if (editingMemo.searchMode === 'now') {
+        runSearch(editingMemo.id, updatedText, editingMemo.tag);
+      }
       setEditingMemo(null);
       setIsEditorOpen(false);
       return;
@@ -163,7 +178,7 @@ function App() {
   };
 
   const editMemo = (memo: typeof memos[number]) => {
-    setEditingMemo({ id: memo.id, text: memo.textData, tag: memo.tags[0] ?? null });
+    setEditingMemo({ id: memo.id, text: memo.textData, tag: memo.tags[0] ?? null, searchMode: memo.searchMode });
     setIsEditorOpen(true);
   };
 
@@ -211,14 +226,14 @@ function App() {
             onDelete={() => {
               setMemos(current =>
                 current.filter(item => item.id !== memo.id)
-            );
+              );
 
-            if (editingMemo?.id === memo.id) {
-              cancelEdit();
-            }
-          }}
-        />
-      ))}
+              if (editingMemo?.id === memo.id) {
+                cancelEdit();
+              }
+            }}
+          />
+        ))}
       </div>
 
       <section
@@ -252,7 +267,7 @@ function App() {
               }}
               rows={1}
             />
-            <SearchModeToggle value={searchMode} onChange={changeSearchMode} />
+            <SearchModeToggle value={editorSearchMode} onChange={changeSearchMode} />
           </div>
           {editingMemo && (
             <div className="memo-edit-status">
