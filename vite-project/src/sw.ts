@@ -1,11 +1,11 @@
-import { cleanupOutdatedCaches, precacheAndRoute } from "workbox-precaching";
+import {
+  cleanupOutdatedCaches,
+  precacheAndRoute,
+} from "workbox-precaching";
 
 declare const self: ServiceWorkerGlobalScope;
 
-// ビルド時に __WB_MANIFEST がキャッシュ対象ファイル一覧へ置換される
 precacheAndRoute(self.__WB_MANIFEST);
-
-// 古いバージョンのキャッシュを削除
 cleanupOutdatedCaches();
 
 self.addEventListener("push", (event) => {

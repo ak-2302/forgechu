@@ -137,7 +137,7 @@ function App() {
         userId: getUserId(),
         body: memoText,
         tags: selectedTag ? [selectedTag] : [],
-        dueAt: Date.now() + 60_000,
+        dueAt: Date.now() + 30_000,
         repeatInterval: 0,
       });
     } catch (error) {
@@ -167,6 +167,9 @@ function App() {
         notificationError instanceof Error
           ? notificationError.message
           : "不明なエラーが発生しました";
+      window.alert(
+        `メモは保存しましたが、通知を登録できませんでした。\n${message}`,
+      );
     }
   };
 

@@ -8,7 +8,7 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 // https://vite.dev/config/
 export default defineConfig({
   server: {
-    allowedHosts: true
+    allowedHosts: true,
   },
   plugins: [
     react(),
@@ -17,7 +17,7 @@ export default defineConfig({
       strategies: "injectManifest",
       srcDir: "src",
       filename: "sw.ts",
-      devOptions: { enabled: true },
+      devOptions: { enabled: true, type: "module" },
       registerType: "autoUpdate",
       manifest: {
         name: "ぎもんNOTE",

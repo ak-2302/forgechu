@@ -4,7 +4,7 @@ import { sendReminderPush } from "../push/sendPush";
 export async function processDueReminders(env: Env) {
   const now = Date.now();
   const dueReminders = await env.DB.prepare(
-    "SELECT id,user_id,body,repeat_interval FROM reminder_notes WHERE next_remind_at <= ? AND is_done = 0",
+    "SELECT id,user_id,body,tags,repeat_interval FROM reminder_notes WHERE next_remind_at <= ? AND is_done = 0",
   )
     .bind(now)
     .all<{
