@@ -7,7 +7,8 @@ type PageQuery = {
     missing?: boolean;
     invalid?: boolean;
     extract?: string;
-    pageprops?: { disambiguation?: string };
+    description?: string;
+    pageprops?: { disambiguation?: string; wikibase_item?: string };
   }[];
 };
 
@@ -64,17 +65,17 @@ const articleUrl = (title: string) => `https://ja.wikipedia.org/wiki/${encodeURI
 
 const toCandidate = (title: string): WikipediaArticle => ({ title, extract: "", url: articleUrl(title) });
 
-const request = async <T>(params: Record<string, string>): Promise<T | null> => {
+export const fetchApi = async <T>(apiUrl: string, params: Record<string, string>): Promise<T | null> => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
-    const response = await fetch(`${API_URL}?${new URLSearchParams({ action: "query", format: "json", formatversion: "2", origin: "*", ...params })}`, {
+    const response = await fetch(`${apiUrl}?${new URLSearchParams({ format: "json", formatversion: "2", origin: "*", ...params })}`, {
       headers: { "Api-User-Agent": "GimonNote/0.1 (demo)" },
       signal: controller.signal,
     });
     if (!response.ok) return null;
-    const data = (await response.json()) as { query?: T; error?: unknown };
-    return data.error || !data.query ? null : data.query;
+    const data = (await response.json()) as T & { error?: unknown };
+    return data.error ? null : data;
   } catch {
     return null;
   } finally {
@@ -82,12 +83,17 @@ const request = async <T>(params: Record<string, string>): Promise<T | null> => 
   }
 };
 
+const request = async <T>(params: Record<string, string>): Promise<T | null> => {
+  const data = await fetchApi<{ query?: T }>(API_URL, { action: "query", ...params });
+  return data?.query ?? null;
+};
+
 const fetchPage = async (title: string): Promise<PageLookup> => {
   const query = await request<PageQuery>({
     titles: title,
     redirects: "1",
-    prop: "pageprops|extracts",
-    ppprop: "disambiguation",
+    prop: "pageprops|extracts|description",
+    ppprop: "disambiguation|wikibase_item",
     exintro: "1",
     explaintext: "1",
   });
@@ -96,7 +102,13 @@ const fetchPage = async (title: string): Promise<PageLookup> => {
   if (!page || page.missing || page.invalid) return { status: "notFound" };
   return {
     status: "page",
-    article: { title: page.title, extract: page.extract ?? "", url: articleUrl(page.title) },
+    article: {
+      title: page.title,
+      extract: page.extract ?? "",
+      url: articleUrl(page.title),
+      description: page.description,
+      wikidataId: page.pageprops?.wikibase_item,
+    },
     disambiguation: page.pageprops?.disambiguation !== undefined,
   };
 };
@@ -132,6 +144,11 @@ const complete = async (lookup: PageLookup, candidates: WikipediaArticle[]): Pro
 const findExact = async (term: Term) => {
   const exact = await fetchPage(term.original);
   return exact.status === "notFound" && term.original !== term.normalized ? fetchPage(term.normalized) : exact;
+};
+
+export const fetchFullExtract = async (title: string) => {
+  const query = await request<PageQuery>({ titles: title, prop: "extracts", explaintext: "1", exsectionformat: "wiki" });
+  return query?.pages[0]?.extract ?? null;
 };
 
 export const fetchArticle = async (title: string) => complete(await fetchPage(title), []);

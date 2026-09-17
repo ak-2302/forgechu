@@ -136,6 +136,49 @@
     margin-left: 0.5rem;
 }
 
+.search-result-answer {
+    margin-bottom: 0.4rem;
+}
+
+.search-result-answer > :first-child {
+    margin-top: 0;
+}
+
+.search-result-description {
+    font-weight: 700;
+}
+
+.search-result-facts {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: 0.1rem 0.8rem;
+    margin: 0;
+}
+
+.search-result-fact {
+    display: contents;
+}
+
+.search-result-facts dt {
+    color: #52647c;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.search-result-facts dd {
+    margin: 0;
+}
+
+.search-result-steps {
+    margin: 0.2rem 0 0;
+    padding-left: 1.2rem;
+}
+
+.search-result-step-heading {
+    font-weight: 700;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .search-result-chevron { transition: none; }
 }

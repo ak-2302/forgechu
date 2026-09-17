@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type TouchEvent } from 'react';
 import './App.css';
 import settings from './assets/settings.png';
 import MemoCard from './components/MemoCard';
+import { answerFor } from './search/answer';
 import { summarize } from './search/summarize';
 import type { MemoSearch, SelectedArticle, WikipediaArticle } from './search/types';
 import { fetchArticle, searchWikipedia } from './search/wikipedia';
@@ -27,7 +28,7 @@ function App() {
 
   useEffect(() => {
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-  }, [memos]);
+  }, [memos.length]);
 
   const resizeInput = () => {
     const input = inputRef.current;
@@ -91,8 +92,9 @@ function App() {
   const runSearch = async (id: string, query: string, tag: Tag | null) => {
     try {
       const result = await searchWikipedia(query, tag);
-      const summary = await summarize(result, tag);
-      updateSearch(id, { status: 'done', result, summary });
+      const answer = await answerFor(result, tag);
+      const summary = await summarize(result, tag, answer);
+      updateSearch(id, { status: 'done', result, answer, summary });
     } catch {
       updateSearch(id, { status: 'error' });
     }
@@ -114,8 +116,9 @@ function App() {
         updateSelected(id, { status: 'error', candidate }, candidate);
         return;
       }
-      const summary = await summarize(result, tag);
-      updateSelected(id, { status: 'done', candidate, result, summary }, candidate);
+      const answer = await answerFor(result, tag);
+      const summary = await summarize(result, tag, answer);
+      updateSelected(id, { status: 'done', candidate, result, answer, summary }, candidate);
     } catch {
       updateSelected(id, { status: 'error', candidate }, candidate);
     }

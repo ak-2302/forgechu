@@ -1,5 +1,5 @@
 import { useId, useRef, useState } from "react";
-import type { MemoSearch, SelectedArticle, WikipediaArticle, WikipediaFound } from "../search/types";
+import type { AnswerFact, MemoSearch, SelectedArticle, TagAnswer, WikipediaArticle, WikipediaFound } from "../search/types";
 import "./SearchResult.css";
 
 type SearchResultProps = {
@@ -38,7 +38,71 @@ const Source = (props: { articles: WikipediaArticle[] }) => (
   </p>
 );
 
-const FoundView = (props: { result: WikipediaFound; summary: string | null; onSelect: (candidate: WikipediaArticle) => void }) => {
+const FactList = (props: { facts: AnswerFact[] }) => (
+  <dl className="search-result-facts">
+    {props.facts.map(fact => (
+      <div key={fact.label} className="search-result-fact">
+        <dt>{fact.label}</dt>
+        <dd>{fact.value}</dd>
+      </div>
+    ))}
+  </dl>
+);
+
+const Answer = (props: { answer: TagAnswer; summary: string | null }) => {
+  const { answer } = props;
+
+  if (answer.kind === "unreadable") {
+    return <p className="search-result-status search-result-answer">この記事から{answer.topic}は読み取れませんでした。</p>;
+  }
+
+  if (answer.kind === "section") {
+    return (
+      <div className="search-result-answer">
+        <p className="search-result-label">「{answer.heading}」の章より</p>
+        {answer.steps ? (
+          <ol className="search-result-steps">
+            {answer.steps.map((step, index) => (
+              <li key={`${index}-${step.heading}`}>
+                <span className="search-result-step-heading">{step.heading}</span>：{step.sentence}
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="search-result-summary">{props.summary ?? answer.sentences.join("\n")}</p>
+        )}
+      </div>
+    );
+  }
+
+  if (answer.kind === "place") {
+    return (
+      <div className="search-result-answer">
+        {answer.facts.length > 0 && <FactList facts={answer.facts} />}
+        {answer.mapUrl && (
+          <p>
+            <a href={answer.mapUrl} target="_blank" rel="noopener noreferrer">地図で見る（OpenStreetMap）</a>
+          </p>
+        )}
+        {answer.section && (
+          <>
+            <p className="search-result-label">「{answer.section.heading}」の章より</p>
+            <p className="search-result-summary">{answer.section.sentences.join("\n")}</p>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="search-result-answer">
+      {answer.description && <p className="search-result-description">{answer.description}</p>}
+      {answer.facts.length > 0 && <FactList facts={answer.facts} />}
+    </div>
+  );
+};
+
+const FoundView = (props: { result: WikipediaFound; answer: TagAnswer | null; summary: string | null; onSelect: (candidate: WikipediaArticle) => void }) => {
   const { articles, candidates, disambiguation } = props.result;
 
   if (disambiguation) {
@@ -55,9 +119,13 @@ const FoundView = (props: { result: WikipediaFound; summary: string | null; onSe
     ? articles.map(article => `${article.title}：${excerpt(article.extract)}`).join("\n")
     : excerpt(articles[0].extract);
 
+  const introSummary = props.answer?.kind === "section" ? null : props.summary;
+
   return (
     <>
-      <p className="search-result-summary">{props.summary ?? fallback}</p>
+      {props.answer && <Answer answer={props.answer} summary={props.summary} />}
+      {props.answer && props.answer.kind !== "unreadable" && <p className="search-result-label">記事の冒頭</p>}
+      <p className="search-result-summary">{introSummary ?? fallback}</p>
       <Source articles={articles} />
       {candidates.length > 0 && (
         <>
@@ -90,7 +158,7 @@ const SelectedView = (props: { selected: SelectedArticle; onSelect: (candidate: 
           </p>
         </>
       )}
-      {props.selected.status === "done" && <FoundView result={props.selected.result} summary={props.selected.summary} onSelect={props.onSelect} />}
+      {props.selected.status === "done" && <FoundView result={props.selected.result} answer={props.selected.answer} summary={props.selected.summary} onSelect={props.onSelect} />}
     </>
   );
 };
@@ -105,7 +173,7 @@ const SearchResultBody = (props: { search: MemoSearch; onSelect: (candidate: Wik
   if (props.search.selected) {
     return <SelectedView selected={props.search.selected} onSelect={props.onSelect} onBack={props.onBack} />;
   }
-  return <FoundView result={props.search.result} summary={props.search.summary} onSelect={props.onSelect} />;
+  return <FoundView result={props.search.result} answer={props.search.answer} summary={props.search.summary} onSelect={props.onSelect} />;
 };
 
 const SearchResult = (props: SearchResultProps) => {
