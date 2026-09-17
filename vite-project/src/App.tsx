@@ -95,6 +95,26 @@ function App() {
     setIsEditorOpen(false);
   };
 
+
+
+
+
+  type NavigatorWithVirtualKeyboard = Navigator & {
+    virtualKeyboard: {
+      show(): void;
+      hide(): void;
+    };
+  };
+
+  const nav = navigator as NavigatorWithVirtualKeyboard;
+
+  if ("virtualKeyboard" in nav) {
+    nav.virtualKeyboard.show();
+  }
+
+
+
+
   return (
     <>
       <div id="header">
