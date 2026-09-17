@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type TouchEvent } from 'react';
 import './App.css';
 import settings from './assets/settings.png';
 import MemoCard from './components/MemoCard';
+import { scheduleReminderNotification } from './reminders/scheduleReminderNotification';
 import SearchModeToggle, { type SearchMode } from './components/SearchModeToggle';
 import { answerFor } from './search/answer';
 import { summarize } from './search/summarize';
@@ -150,6 +151,9 @@ function App() {
       setIsEditorOpen(false);
       return;
     }
+    if (!text.trim()) return;
+    scheduleReminderNotification(text.trim(), selectedTag ? [selectedTag] : []);
+     
     const now = new Date();
     const pad = (value: number) => String(value).padStart(2, '0');
     const date = `${now.getFullYear()}/${pad(now.getMonth() + 1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;

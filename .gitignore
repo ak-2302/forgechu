@@ -30,3 +30,10 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+vite-project/dev-dist
+.wrangler
+.dev.vars
+.dev.vars.*
+.env
+!.dev.vars.example

@@ -2,15 +2,22 @@ import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import { defineConfig } from 'vite'
 import { VitePWA } from "vite-plugin-pwa";
+import { cloudflare } from "@cloudflare/vite-plugin";
 
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    allowedHosts: true,
+  },
   plugins: [
     react(),
     babel({ presets: [reactCompilerPreset()] }),
     VitePWA({
-      devOptions: { enabled: true },
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.ts",
+      devOptions: { enabled: true, type: "module" },
       registerType: "autoUpdate",
       manifest: {
         name: "ぎもんNOTE",
@@ -38,5 +45,6 @@ export default defineConfig({
         ],
       },
     }),
+    cloudflare(),
   ],
 });
