@@ -61,6 +61,73 @@
   letter-spacing: 0;
 }
 
+#settings-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+#settings-button:hover,
+#settings-button:focus-visible {
+  background: #dfe7f2;
+  outline: none;
+}
+
+.settings-modal {
+  box-sizing: border-box;
+  width: min(28rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 1.25rem;
+  border: 0;
+  border-radius: 16px;
+  background: #fff;
+  color: #222;
+  overflow-y: auto;
+}
+
+.settings-modal::backdrop {
+  background: rgb(0 0 0 / 40%);
+}
+
+.settings-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.settings-modal h2 {
+  margin: 0;
+  color: #24324a;
+  font-size: 1.25rem;
+}
+
+.settings-close-button {
+  align-self: flex-end;
+  min-height: 2.4rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #dfe3ea;
+  border-radius: 10px;
+  background: #fff;
+  color: #4b5563;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.settings-close-button:hover,
+.settings-close-button:focus-visible {
+  background: #eef2f8;
+  outline: none;
+}
+
 #memo-list {
   box-sizing: border-box;
   width: 100%;
