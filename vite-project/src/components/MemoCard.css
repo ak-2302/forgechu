@@ -4,8 +4,34 @@
     border-radius: 12px;
     width: 100%;
     background-color: white;
-    padding: 0.8rem 2.6rem 0.8rem 1rem;
+    padding: 0.8rem 5.5rem 0.8rem 1rem;
     margin-top: 0.5rem;
+}
+
+.memo-search-button {
+    position: absolute;
+    top: 1.2rem;
+    right: 2.6rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    min-width: 44px;
+    height: 2rem;
+    min-height: 44px;
+    margin-top: calc((2rem - max(2rem, 44px)) / 2);
+    border-radius: 50%;
+    color: #52647c;
+    text-decoration: none;
+}
+
+.memo-search-button:hover {
+    background: #eef2f8;
+}
+
+.memo-search-button:focus-visible {
+    outline: 2px solid #4170b5;
+    outline-offset: 2px;
 }
 
 .memo-text-row {
@@ -15,9 +41,7 @@
 
 .memo-text {
     min-width: 0;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
     text-align: left;
     color: #1f2a37;
     font-size: 1rem;

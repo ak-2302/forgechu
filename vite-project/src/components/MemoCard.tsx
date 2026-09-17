@@ -10,9 +10,26 @@ const MemoCard = (props: {
   onEdit?: () => void;
   onDelete?: () => void;
 }) => {
+  const searchQuery = [props.textData.trim(), ...props.tags].filter(Boolean).join(' ');
+  const searchUrl = `https://www.google.com/search?${new URLSearchParams({ q: searchQuery })}`;
+
   return (
     <div className="memo-card">
       <MemoOption onEdit={props.onEdit} onDelete={props.onDelete} />
+      <a
+        className="memo-search-button"
+        href={searchUrl}
+        target="_blank"
+        rel="noopener noreferrer external"
+        aria-label={`${searchQuery}をGoogleで検索（別画面で開きます）`}
+        title="Googleで検索"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.5" />
+          <path d="m16 16 5 5" />
+        </svg>
+      </a>
+      <MemoOption onDelete={props.onDelete} />
       <div className="memo-text-row">
         <p className="memo-text">{props.textData}</p>
         <>
