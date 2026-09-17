@@ -2,8 +2,7 @@ import { useEffect, useRef, useState, type TouchEvent } from "react";
 import "./App.css";
 import settings from "./assets/settings.png";
 import MemoCard from "./components/MemoCard";
-import { getUserId, subscribePush } from "./push/subscribe";
-import { createReminder } from "./reminders/createReminder";
+import { scheduleReminderNotification } from "./reminders/scheduleReminderNotification";
 import { TAGS, TAG_KEY, type Tag } from "./tags";
 
 function App() {
@@ -50,7 +49,6 @@ function App() {
   const [text, setText] = useState("");
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
   const editorRef = useRef<HTMLElement>(null);
   const settingsRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -123,28 +121,9 @@ function App() {
     inputRef.current?.focus();
   };
 
-  const saveMemo = async () => {
-    const memoText = text.trim();
-    if (!memoText || isSaving) return;
-
-    setIsSaving(true);
-
-    let notificationError: unknown = null;
-
-    try {
-      await subscribePush();
-      await createReminder({
-        userId: getUserId(),
-        body: memoText,
-        tags: selectedTag ? [selectedTag] : [],
-        dueAt: Date.now() + 30_000,
-        repeatInterval: 0,
-      });
-    } catch (error) {
-      notificationError = error;
-      console.error("通知の登録に失敗しました", error);
-    }
-
+  const saveMemo = () => {
+    if (!text.trim()) return;
+    scheduleReminderNotification(text.trim(), selectedTag ? [selectedTag] : []);
     const now = new Date();
     const pad = (value: number) => String(value).padStart(2, "0");
     const date = `${now.getFullYear()}/${pad(now.getMonth() + 1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
@@ -152,7 +131,7 @@ function App() {
       ...current,
       {
         id: crypto.randomUUID(),
-        textData: memoText,
+        textData: text.trim(),
         date,
         tags: selectedTag ? [selectedTag] : [],
       },
@@ -160,17 +139,6 @@ function App() {
     setText("");
     setSelectedTag(null);
     setIsEditorOpen(false);
-    setIsSaving(false);
-
-    if (notificationError) {
-      const message =
-        notificationError instanceof Error
-          ? notificationError.message
-          : "不明なエラーが発生しました";
-      window.alert(
-        `メモは保存しましたが、通知を登録できませんでした。\n${message}`,
-      );
-    }
   };
 
   return (
@@ -233,7 +201,7 @@ function App() {
         <form
           onSubmit={(event) => {
             event.preventDefault();
-            void saveMemo();
+            saveMemo();
           }}
         >
           <div className="memo-editor-top">
@@ -269,9 +237,9 @@ function App() {
             <button
               className="memo-save-button"
               type="submit"
-              disabled={!text.trim() || isSaving}
+              disabled={!text.trim()}
             >
-              {isSaving ? "保存中…" : "保存"}
+              保存
             </button>
           </div>
         </form>

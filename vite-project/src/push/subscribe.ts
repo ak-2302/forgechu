@@ -7,6 +7,10 @@ type SubscriptionRequestBody = {
   subscription: PushSubscription;
 };
 
+const SERVICE_WORKER_READY_TIMEOUT_MS = 10_000;
+
+let pendingSubscription: Promise<PushSubscription> | null = null;
+
 function isPushSupported(): boolean {
   return (
     "serviceWorker" in navigator &&
@@ -58,6 +62,24 @@ async function saveSubscription(body: SubscriptionRequestBody): Promise<void> {
   }
 }
 
+async function waitForServiceWorker(): Promise<ServiceWorkerRegistration> {
+  let timeoutId: number | undefined;
+
+  const timeout = new Promise<never>((_, reject) => {
+    timeoutId = window.setTimeout(() => {
+      reject(new Error("Service Workerの起動を確認できませんでした"));
+    }, SERVICE_WORKER_READY_TIMEOUT_MS);
+  });
+
+  try {
+    return await Promise.race([navigator.serviceWorker.ready, timeout]);
+  } finally {
+    if (timeoutId !== undefined) {
+      window.clearTimeout(timeoutId);
+    }
+  }
+}
+
 export function getUserId(): string {
   let userId = localStorage.getItem("user_id");
 
@@ -69,7 +91,7 @@ export function getUserId(): string {
   return userId;
 }
 
-export async function subscribePush(): Promise<PushSubscription> {
+async function createOrReuseSubscription(): Promise<PushSubscription> {
   if (!isPushSupported()) {
     throw new Error("このブラウザはPush通知に対応していません");
   }
@@ -84,7 +106,7 @@ export async function subscribePush(): Promise<PushSubscription> {
     throw new Error("通知が許可されませんでした");
   }
 
-  const registration = await navigator.serviceWorker.ready;
+  const registration = await waitForServiceWorker();
   let subscription = await registration.pushManager.getSubscription();
 
   if (!subscription) {
@@ -102,4 +124,14 @@ export async function subscribePush(): Promise<PushSubscription> {
   });
 
   return subscription;
+}
+
+export function subscribePush(): Promise<PushSubscription> {
+  if (!pendingSubscription) {
+    pendingSubscription = createOrReuseSubscription().finally(() => {
+      pendingSubscription = null;
+    });
+  }
+
+  return pendingSubscription;
 }

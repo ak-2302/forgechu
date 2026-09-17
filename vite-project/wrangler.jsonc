@@ -15,6 +15,7 @@
     "d1_databases": [{
         "binding": "DB",
         "database_name": "gimon-notes-db",
+        // ローカルD1専用の仮ID。本番デプロイ時は実際のdatabase_idに置き換える。
         "database_id": "0000000-0000-0000-0000-000000000000"
     }],
 }
