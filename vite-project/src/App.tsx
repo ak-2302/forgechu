@@ -182,7 +182,6 @@ function App() {
               }}
               rows={1}
             />
-            <button className="memo-save-button" type="submit" disabled={!editorText.trim()}>保存</button>
           </div>
           {editingMemo && (
             <div className="memo-edit-status">
@@ -190,23 +189,6 @@ function App() {
               <button className="settings-close-button" type="button" onClick={cancelEdit}>キャンセル</button>
             </div>
           )}
-          <fieldset className="question-tags">
-            <legend>疑問タグ（1つだけ選択できます）</legend>
-            <div className="question-tag-options">
-              {TAGS.map(tag => (
-                <button
-                  key={tag}
-                  type="button"
-                  className="memotag question-tag-button"
-                  data-tag={TAG_KEY[tag]}
-                  aria-pressed={editorTag === tag}
-                  onPointerDown={event => event.preventDefault()}
-                  onClick={() => toggleTag(tag)}
-                >#{tag}</button>
-              ))}
-            </div>
-          </fieldset>
-          </div>
           <div className="memo-editor-bottom">
             <fieldset className="question-tags">
               <legend>疑問タグ（1つだけ選択できます）</legend>
@@ -217,14 +199,14 @@ function App() {
                     type="button"
                     className="memotag question-tag-button"
                     data-tag={TAG_KEY[tag]}
-                    aria-pressed={selectedTag === tag}
+                    aria-pressed={editorTag === tag}
                     onPointerDown={event => event.preventDefault()}
                     onClick={() => toggleTag(tag)}
                   >#{tag}</button>
                 ))}
               </div>
             </fieldset>
-            <button className="memo-save-button" type="submit" disabled={!text.trim()}>保存</button>
+            <button className="memo-save-button" type="submit" disabled={!editorText.trim()}>保存</button>
           </div>
         </form>
       </section>

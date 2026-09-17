@@ -15,7 +15,6 @@ const MemoCard = (props: {
 
   return (
     <div className="memo-card">
-      <MemoOption onEdit={props.onEdit} onDelete={props.onDelete} />
       <a
         className="memo-search-button"
         href={searchUrl}
@@ -29,7 +28,7 @@ const MemoCard = (props: {
           <path d="m16 16 5 5" />
         </svg>
       </a>
-      <MemoOption onDelete={props.onDelete} />
+      <MemoOption onEdit={props.onEdit} onDelete={props.onDelete} />
       <div className="memo-text-row">
         <p className="memo-text">{props.textData}</p>
         <>
