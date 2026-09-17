@@ -1,0 +1,247 @@
+.search-result {
+    margin-top: 0.4rem;
+    margin-right: -4.5rem;
+    text-align: left;
+}
+
+.search-result-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 44px;
+    margin-left: -0.5rem;
+    padding: 0 0.5rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #52647c;
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.search-result-toggle:hover {
+    background: #eef2f8;
+}
+
+.search-result-toggle:focus-visible {
+    outline: 2px solid #4170b5;
+    outline-offset: 2px;
+}
+
+.search-result-chevron {
+    transition: transform 150ms ease-out;
+}
+
+.search-result-toggle[aria-expanded="false"] .search-result-chevron {
+    transform: rotate(-90deg);
+}
+
+.search-result-body {
+    padding: 0.6rem 0.8rem;
+    border-radius: 12px;
+    background: #eef2f8;
+    color: #1f2a37;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.search-result-summary {
+    white-space: pre-line;
+}
+
+.search-result-status {
+    color: #52647c;
+}
+
+.search-result-source,
+.search-result-label {
+    margin-top: 0.4rem;
+    color: #9aa3b2;
+    font-size: 0.7rem;
+}
+
+.search-result a {
+    color: #4170b5;
+}
+
+.search-result-body:focus {
+    outline: none;
+}
+
+.search-result-list {
+    margin: 0.2rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.search-result-candidate {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    min-height: 44px;
+    padding: 0.3rem 0.5rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #4170b5;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.search-result-candidate-title {
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.search-result-candidate-description {
+    color: #52647c;
+    font-size: 0.75rem;
+}
+
+.search-result-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 44px;
+    margin: -0.4rem 0 0 -0.5rem;
+    padding: 0 0.5rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #52647c;
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.search-result-candidate:hover,
+.search-result-back:hover {
+    background: #fff;
+}
+
+.search-result-candidate:focus-visible,
+.search-result-back:focus-visible {
+    outline: 2px solid #4170b5;
+    outline-offset: 2px;
+}
+
+.search-result-more {
+    margin-left: 0.5rem;
+}
+
+.search-result-answer {
+    margin-bottom: 0.4rem;
+}
+
+.search-result-answer > :first-child {
+    margin-top: 0;
+}
+
+.search-result-description {
+    font-weight: 700;
+}
+
+.search-result-facts {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: 0.1rem 0.8rem;
+    margin: 0;
+}
+
+.search-result-fact {
+    display: contents;
+}
+
+.search-result-facts dt {
+    color: #52647c;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.search-result-facts dd {
+    margin: 0;
+}
+
+.search-result-steps {
+    margin: 0.2rem 0 0;
+    padding-left: 1.2rem;
+}
+
+.search-result-step-heading {
+    font-weight: 700;
+}
+
+.search-result-comparison-title {
+    font-weight: 700;
+}
+
+.search-result-sentences {
+    margin: 0.2rem 0 0;
+    padding-left: 1.2rem;
+}
+
+.search-result-sentence-heading {
+    color: #52647c;
+    font-size: 0.75rem;
+}
+
+.search-result-comparison-table {
+    width: 100%;
+    margin-top: 0.4rem;
+    border-collapse: collapse;
+}
+
+.search-result-comparison-table th,
+.search-result-comparison-table td {
+    padding: 0.2rem 0.4rem;
+    border-bottom: 1px solid #fff;
+    text-align: left;
+    vertical-align: top;
+}
+
+.search-result-comparison-table th {
+    color: #52647c;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.search-result-comparison-table tbody th {
+    white-space: nowrap;
+}
+
+.search-result-expand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-left: -0.5rem;
+    padding: 0 0.5rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #52647c;
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.search-result-expand:hover {
+    background: #fff;
+}
+
+.search-result-expand:focus-visible {
+    outline: 2px solid #4170b5;
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .search-result-chevron { transition: none; }
+}
