@@ -11,9 +11,9 @@ import { TAGS, TAG_KEY, type Tag } from './tags';
 
 function App() {
   const [memos, setMemos] = useState<{ id: string; textData: string; date: string; tags: Tag[]; searchMode: SearchMode; search?: MemoSearch }[]>([
-    { id: 'initial-1', textData: '永瀬美穂', date: '1970/01/01 00:00:00', tags: ['だれ'], searchMode: 'now' },
     { id: 'initial-2', textData: 'ンジャメナ', date: '1973/09/07 00:00:00', tags: ['どこ'], searchMode: 'later' },
     { id: 'initial-3', textData: '１０まんボルト', date: '1996/02/27 00:00:00', tags: ['方法'], searchMode: 'now' },
+    { id: 'initial-1', textData: '永瀬美穂', date: '2026/01/02 00:00:00', tags: ['だれ'], searchMode: 'now' },
     { id: 'initial-4', textData: '男はウミガメのスープを飲み、その後死んでしまった', date: '2026/06/16 00:00:00', tags: ['なぜ'], searchMode: 'later' },
     { id: 'initial-5', textData: 'ビールと発泡酒', date: '2026/08/07 00:00:00', tags: ['ちがい'], searchMode: 'now' },
     { id: 'initial-6', textData: 'ナビエ=ストークス方程式', date: '2026/09/15 15:36:00', tags: ['とは'], searchMode: 'later' },
