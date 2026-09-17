@@ -2,10 +2,13 @@ import { useEffect, useRef, useState, type TouchEvent } from 'react';
 import './App.css';
 import settings from './assets/settings.png';
 import MemoCard from './components/MemoCard';
+import { summarize } from './search/summarize';
+import type { MemoSearch } from './search/types';
+import { searchWikipedia } from './search/wikipedia';
 import { TAGS, TAG_KEY, type Tag } from './tags';
 
 function App() {
-  const [memos, setMemos] = useState<{ id: string; textData: string; date: string; tags: Tag[] }[]>([
+  const [memos, setMemos] = useState<{ id: string; textData: string; date: string; tags: Tag[]; searchMode?: 'now'; search?: MemoSearch }[]>([
     { id: 'initial-1', textData: 'サトシ・ナカモト', date: '1970/01/01 00:00:00', tags: ['だれ'] },
     { id: 'initial-2', textData: 'ンジャメナ', date: '1973/09/07 00:00:00', tags: ['どこ'] },
     { id: 'initial-3', textData: '１０まんボルト', date: '1996/02/27 00:00:00', tags: ['方法'] },
@@ -81,15 +84,31 @@ function App() {
     inputRef.current?.focus();
   };
 
+  const updateSearch = (id: string, search: MemoSearch) => {
+    setMemos(current => current.map(memo => memo.id === id ? { ...memo, search } : memo));
+  };
+
+  const runSearch = async (id: string, query: string, tag: Tag | null) => {
+    try {
+      const result = await searchWikipedia(query, tag);
+      const summary = await summarize(result, tag);
+      updateSearch(id, { status: 'done', result, summary });
+    } catch {
+      updateSearch(id, { status: 'error' });
+    }
+  };
+
   const saveMemo = () => {
     if (!text.trim()) return;
     const now = new Date();
     const pad = (value: number) => String(value).padStart(2, '0');
     const date = `${now.getFullYear()}/${pad(now.getMonth() + 1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    const id = crypto.randomUUID();
     setMemos(current => [
       ...current,
-      { id: crypto.randomUUID(), textData: text.trim(), date, tags: selectedTag ? [selectedTag] : [] },
+      { id, textData: text.trim(), date, tags: selectedTag ? [selectedTag] : [], searchMode: 'now', search: { status: 'loading' } },
     ]);
+    runSearch(id, text.trim(), selectedTag);
     setText('');
     setSelectedTag(null);
     setIsEditorOpen(false);
@@ -118,7 +137,7 @@ function App() {
       </dialog>
       <div id="memo-list">
         {memos.map(memo => (
-          <MemoCard key={memo.id} textData={memo.textData} date={memo.date} tags={memo.tags} onDelete={() => setMemos(current => current.filter(item => item.id !== memo.id))} />
+          <MemoCard key={memo.id} textData={memo.textData} date={memo.date} tags={memo.tags} search={memo.search} onDelete={() => setMemos(current => current.filter(item => item.id !== memo.id))} />
         ))}
       </div>
 
