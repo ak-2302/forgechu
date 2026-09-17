@@ -1,17 +1,22 @@
 import { useEffect, useRef, useState, type TouchEvent } from 'react';
 import './App.css';
-import MemoCard from './components/MemoCard';
 import settings from './assets/settings.png';
+import MemoCard from './components/MemoCard';
 import { TAGS, TAG_KEY, type Tag } from './tags';
 
 function App() {
   const [memos, setMemos] = useState<{ id: string; textData: string; date: string; tags: Tag[] }[]>([
-    { id: 'initial-1', textData: '天文学的苦痛のリスク', date: '2026/09/15 15:36:00', tags: ['とは'] },
-    { id: 'initial-2', textData: 'ナビエ=ストークス方程式', date: '2026/09/15 15:36:00', tags: ['とは'] },
+    { id: 'initial-1', textData: 'サトシ・ナカモト', date: '1970/01/01 00:00:00', tags: ['だれ'] },
+    { id: 'initial-2', textData: 'ンジャメナ', date: '1973/09/07 00:00:00', tags: ['どこ'] },
+    { id: 'initial-3', textData: '１０まんボルト', date: '1996/02/27 00:00:00', tags: ['方法'] },
+    { id: 'initial-4', textData: '男はウミガメのスープを飲み、その後死んでしまった', date: '2026/06/16 00:00:00', tags: ['なぜ'] },
+    { id: 'initial-5', textData: 'ビールと発泡酒', date: '2026/08/07 00:00:00', tags: ['ちがい'] },
+    { id: 'initial-6', textData: 'ナビエ=ストークス方程式', date: '2026/09/15 15:36:00', tags: ['とは'] },
   ]);
   const [text, setText] = useState('');
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
-  const editorRef = useRef<HTMLDialogElement>(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(true);
+  const editorRef = useRef<HTMLElement>(null);
   const settingsRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -31,11 +36,28 @@ function App() {
   useEffect(resizeInput, [text]);
 
   const openEditor = () => {
-    if (editorRef.current?.open) return;
-    editorRef.current?.showModal();
-    resizeInput();
-    inputRef.current?.focus();
+    setIsEditorOpen(true);
   };
+
+  useEffect(() => {
+    if (isEditorOpen) {
+      resizeInput();
+      inputRef.current?.focus();
+    }
+  }, [isEditorOpen]);
+
+  useEffect(() => {
+    if (!isEditorOpen) return;
+
+    const closeEditorOnOutsideTap = (event: PointerEvent) => {
+      if (editorRef.current && !editorRef.current.contains(event.target as Node)) {
+        setIsEditorOpen(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', closeEditorOnOutsideTap);
+    return () => document.removeEventListener('pointerdown', closeEditorOnOutsideTap);
+  }, [isEditorOpen]);
 
   const openSettings = () => {
     if (settingsRef.current?.open) return;
@@ -54,6 +76,11 @@ function App() {
     }
   };
 
+  const toggleTag = (tag: Tag) => {
+    setSelectedTag(current => current === tag ? null : tag);
+    inputRef.current?.focus();
+  };
+
   const saveMemo = () => {
     if (!text.trim()) return;
     const now = new Date();
@@ -65,7 +92,7 @@ function App() {
     ]);
     setText('');
     setSelectedTag(null);
-    editorRef.current?.close();
+    setIsEditorOpen(false);
   };
 
   return (
@@ -95,15 +122,14 @@ function App() {
         ))}
       </div>
 
-      <button
-        id="add-memo-button"
-        type="button"
-        onClick={openEditor}
+      <section
+        ref={editorRef}
+        className={`memo-editor${isEditorOpen ? ' is-open' : ''}`}
+        aria-label="メモを記入"
+        onClick={isEditorOpen ? undefined : openEditor}
         onTouchStart={startSwipe}
         onTouchMove={trackSwipe}
-      >+新しいメモを作成</button>
-
-      <dialog ref={editorRef} className="memo-editor" aria-label="メモを記入">
+      >
         <form onSubmit={event => { event.preventDefault(); saveMemo(); }}>
           <div className="memo-editor-top">
             <textarea
@@ -127,14 +153,14 @@ function App() {
                   className="memotag question-tag-button"
                   data-tag={TAG_KEY[tag]}
                   aria-pressed={selectedTag === tag}
-                  onClick={() => setSelectedTag(tag)}
+                  onPointerDown={event => event.preventDefault()}
+                  onClick={() => toggleTag(tag)}
                 >#{tag}</button>
               ))}
             </div>
           </fieldset>
-          <button className="memo-close-button" type="button" onClick={() => editorRef.current?.close()}>閉じる</button>
         </form>
-      </dialog>
+      </section>
     </>
   );
 }

@@ -33,7 +33,7 @@ const MemoOption = ({ onDelete }: MemoOptionProps) => {
     };
 
     return (
-        <div className="memo-option" ref={optionRef}>
+        <div className={`memo-option${isOpen ? " is-open" : ""}`} ref={optionRef}>
             <button className="memo-option-trigger" type="button" aria-label="メモのオプションを開く" aria-expanded={isOpen} aria-haspopup="menu" onClick={() => setIsOpen(current => !current)}>
                 <span className="memo-option-dots" aria-hidden="true">
                     <span className="memo-option-dot" />
