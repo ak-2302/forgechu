@@ -7,11 +7,12 @@ const MemoCard = (props: {
   textData: string;
   date: string;
   tags: Tag[];
+  onEdit?: () => void;
   onDelete?: () => void;
 }) => {
   return (
     <div className="memo-card">
-      <MemoOption onDelete={props.onDelete} />
+      <MemoOption onEdit={props.onEdit} onDelete={props.onDelete} />
       <div className="memo-text-row">
         <p className="memo-text">{props.textData}</p>
         <>

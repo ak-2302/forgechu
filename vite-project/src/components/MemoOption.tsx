@@ -1,9 +1,9 @@
 import "./MemoOption.css";
 import { useEffect, useRef, useState } from "react";
 
-type MemoOptionProps = { onDelete?: () => void };
+type MemoOptionProps = { onEdit?: () => void; onDelete?: () => void };
 
-const MemoOption = ({ onDelete }: MemoOptionProps) => {
+const MemoOption = ({ onEdit, onDelete }: MemoOptionProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const optionRef = useRef<HTMLDivElement>(null);
 
@@ -42,7 +42,7 @@ const MemoOption = ({ onDelete }: MemoOptionProps) => {
                 </span>
             </button>
             {isOpen && <div className="memo-option-menu" role="menu">
-                {/* 編集機能は一時的に無効化 */}
+                {onEdit && <button type="button" role="menuitem" onClick={() => { closeMenu(); onEdit(); }}>メモを編集</button>}
                 <button className="memo-option-delete-button" type="button" role="menuitem" onClick={requestDelete}>メモを削除</button>
             </div>}
         </div>
