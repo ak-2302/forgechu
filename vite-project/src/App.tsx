@@ -118,6 +118,24 @@ function App() {
     }
   };
 
+
+  /* ---サンプルデータに対して、検索モードが「今すぐ」のメモで検索結果がまだないものを検索するここから--- */
+  useEffect(() => {
+    const immediateMemos = memos.filter(memo => memo.searchMode === 'now' && !memo.search);
+    if (immediateMemos.length === 0) return;
+
+    setMemos(current => current.map(memo =>
+      memo.searchMode === 'now' && !memo.search
+        ? { ...memo, search: { status: 'loading' } }
+        : memo,
+    ));
+    immediateMemos.forEach(memo => {
+      void runSearch(memo.id, memo.textData, memo.tags[0] ?? null);
+    });
+  }, [memos]);
+  /* ---サンプルデータに対して、検索モードが「今すぐ」のメモで検索結果がまだないものを検索するここまで--- */
+
+
   const updateSelected = (id: string, selected: SelectedArticle | undefined, pending?: WikipediaArticle) => {
     setMemos(current => current.map(memo => {
       if (memo.id !== id || memo.search?.status !== 'done') return memo;
