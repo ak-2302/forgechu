@@ -22,7 +22,11 @@ function App() {
   const [isEditorOpen, setIsEditorOpen] = useState(true);
   const editorRef = useRef<HTMLElement>(null);
   const settingsRef = useRef<HTMLDialogElement>(null);
+  const [editingMemo, setEditingMemo] = useState<{ id: string; text: string; tag: Tag | null } | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const editorText = editingMemo ? editingMemo.text : text;
+  const editorTag = editingMemo ? editingMemo.tag : selectedTag;
 
   const startYRef = useRef<number | null>(null);
 
@@ -37,7 +41,7 @@ function App() {
     input.style.height = `${input.scrollHeight}px`;
   };
 
-  useEffect(resizeInput, [text]);
+  useEffect(resizeInput, [editorText]);
 
   const openEditor = () => {
     setIsEditorOpen(true);
@@ -48,7 +52,7 @@ function App() {
       resizeInput();
       inputRef.current?.focus();
     }
-  }, [isEditorOpen]);
+  }, [isEditorOpen, editingMemo?.id]);
 
   useEffect(() => {
     if (!isEditorOpen) return;
@@ -81,7 +85,11 @@ function App() {
   };
 
   const toggleTag = (tag: Tag) => {
-    setSelectedTag(current => current === tag ? null : tag);
+    if (editingMemo) {
+      setEditingMemo({ ...editingMemo, tag: editingMemo.tag === tag ? null : tag });
+    } else {
+      setSelectedTag(current => current === tag ? null : tag);
+    }
     inputRef.current?.focus();
   };
 
@@ -125,7 +133,15 @@ function App() {
   };
 
   const saveMemo = () => {
-    if (!text.trim()) return;
+    if (!editorText.trim()) return;
+    if (editingMemo) {
+      setMemos(current => current.map(memo => memo.id === editingMemo.id
+        ? { ...memo, textData: editingMemo.text.trim(), tags: editingMemo.tag ? [editingMemo.tag] : [] }
+        : memo));
+      setEditingMemo(null);
+      setIsEditorOpen(false);
+      return;
+    }
     const now = new Date();
     const pad = (value: number) => String(value).padStart(2, '0');
     const date = `${now.getFullYear()}/${pad(now.getMonth() + 1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
@@ -137,6 +153,16 @@ function App() {
     runSearch(id, text.trim(), selectedTag);
     setText('');
     setSelectedTag(null);
+    setIsEditorOpen(false);
+  };
+
+  const editMemo = (memo: typeof memos[number]) => {
+    setEditingMemo({ id: memo.id, text: memo.textData, tag: memo.tags[0] ?? null });
+    setIsEditorOpen(true);
+  };
+
+  const cancelEdit = () => {
+    setEditingMemo(null);
     setIsEditorOpen(false);
   };
 
@@ -163,14 +189,42 @@ function App() {
       </dialog>
       <div id="memo-list">
         {memos.map(memo => (
-          <MemoCard key={memo.id} textData={memo.textData} date={memo.date} tags={memo.tags} search={memo.search} onSelectCandidate={candidate => selectCandidate(memo.id, candidate, memo.tags[0] ?? null)} onBackToCandidates={() => updateSelected(memo.id, undefined)} onDelete={() => setMemos(current => current.filter(item => item.id !== memo.id))} />
-        ))}
+          <MemoCard
+            key={memo.id}
+            textData={memo.textData}
+            date={memo.date}
+            tags={memo.tags}
+            search={memo.search}
+            onEdit={() => editMemo(memo)}
+            onSelectCandidate={candidate =>
+              selectCandidate(memo.id, candidate, memo.tags[0] ?? null)
+            }
+            onBackToCandidates={() =>
+              updateSelected(memo.id, undefined)
+            }
+            onDelete={() => {
+              setMemos(current =>
+                current.filter(item => item.id !== memo.id)
+            );
+
+            if (editingMemo?.id === memo.id) {
+              cancelEdit();
+            }
+          }}
+        />
+      ))}
       </div>
 
       <section
         ref={editorRef}
         className={`memo-editor${isEditorOpen ? ' is-open' : ''}`}
-        aria-label="メモを記入"
+        aria-label={editingMemo ? 'メモを編集' : 'メモを記入'}
+        onKeyDown={event => {
+          if (event.key === 'Escape' && editingMemo) {
+            event.stopPropagation();
+            cancelEdit();
+          }
+        }}
         onClick={isEditorOpen ? undefined : openEditor}
         onTouchStart={startSwipe}
         onTouchMove={trackSwipe}
@@ -182,11 +236,23 @@ function App() {
               className="memo-editor-input"
               aria-label="メモ本文"
               placeholder="疑問をメモ…"
-              value={text}
-              onChange={event => setText(event.target.value)}
+              value={editorText}
+              onChange={event => {
+                if (editingMemo) {
+                  setEditingMemo({ ...editingMemo, text: event.target.value });
+                } else {
+                  setText(event.target.value);
+                }
+              }}
               rows={1}
             />
           </div>
+          {editingMemo && (
+            <div className="memo-edit-status">
+              <span>メモを編集中</span>
+              <button className="settings-close-button" type="button" onClick={cancelEdit}>キャンセル</button>
+            </div>
+          )}
           <div className="memo-editor-bottom">
             <fieldset className="question-tags">
               <legend>疑問タグ（1つだけ選択できます）</legend>
@@ -197,14 +263,14 @@ function App() {
                     type="button"
                     className="memotag question-tag-button"
                     data-tag={TAG_KEY[tag]}
-                    aria-pressed={selectedTag === tag}
+                    aria-pressed={editorTag === tag}
                     onPointerDown={event => event.preventDefault()}
                     onClick={() => toggleTag(tag)}
                   >#{tag}</button>
                 ))}
               </div>
             </fieldset>
-            <button className="memo-save-button" type="submit" disabled={!text.trim()}>保存</button>
+            <button className="memo-save-button" type="submit" disabled={!editorText.trim()}>保存</button>
           </div>
         </form>
       </section>

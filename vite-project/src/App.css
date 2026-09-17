@@ -239,3 +239,13 @@ body:has(.memo-editor.is-open) {
 @media (prefers-reduced-motion: reduce) {
   .memo-editor { transition: none; }
 }
+
+.memo-edit-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  color: #6b7280;
+  font-size: 0.8rem;
+}

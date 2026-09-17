@@ -9,6 +9,7 @@ const MemoCard = (props: {
   textData: string;
   date: string;
   tags: Tag[];
+  onEdit?: () => void;
   search?: MemoSearch;
   onSelectCandidate?: (candidate: WikipediaArticle) => void;
   onBackToCandidates?: () => void;
@@ -32,7 +33,7 @@ const MemoCard = (props: {
           <path d="m16 16 5 5" />
         </svg>
       </a>
-      <MemoOption onDelete={props.onDelete} />
+      <MemoOption onEdit={props.onEdit} onDelete={props.onDelete} />
       <div className="memo-text-row">
         <p className="memo-text">{props.textData}</p>
         <>
