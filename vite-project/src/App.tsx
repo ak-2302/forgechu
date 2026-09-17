@@ -12,6 +12,7 @@ function App() {
   const [text, setText] = useState('');
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
   const editorRef = useRef<HTMLDialogElement>(null);
+  const settingsRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const startYRef = useRef<number | null>(null);
@@ -34,6 +35,11 @@ function App() {
     editorRef.current?.showModal();
     resizeInput();
     inputRef.current?.focus();
+  };
+
+  const openSettings = () => {
+    if (settingsRef.current?.open) return;
+    settingsRef.current?.showModal();
   };
 
   const startSwipe = (event: TouchEvent) => {
@@ -66,14 +72,23 @@ function App() {
     <>
       <div id="header">
         <h1>ぎもんNOTE</h1>
-        <img
-          width="28"
-          height="28"
-          src={settings}
-          alt="settings--v1"
-          style={{ cursor: 'pointer', display: 'none' }}
-        />
+        <button id="settings-button" type="button" aria-label="設定を開く" onClick={openSettings}>
+          <img width="28" height="28" src={settings} alt="" />
+        </button>
       </div>
+      <dialog
+        ref={settingsRef}
+        className="settings-modal"
+        aria-labelledby="settings-modal-title"
+        onClick={event => {
+          if (event.target === event.currentTarget) settingsRef.current?.close();
+        }}
+      >
+        <div className="settings-modal-content">
+          <h2 id="settings-modal-title">設定</h2>
+          <button className="settings-close-button" type="button" onClick={() => settingsRef.current?.close()}>閉じる</button>
+        </div>
+      </dialog>
       <div id="memo-list">
         {memos.map(memo => (
           <MemoCard key={memo.id} textData={memo.textData} date={memo.date} tags={memo.tags} onDelete={() => setMemos(current => current.filter(item => item.id !== memo.id))} />
