@@ -1,5 +1,5 @@
-import { Env } from "..";
+/*import { Env } from "..";
 
 interface GetReminderListBody {
     userId: string;
-}
+}*/

@@ -36,3 +36,4 @@ vite-project/dev-dist
 .dev.vars
 .dev.vars.*
 .env
+!.dev.vars.example

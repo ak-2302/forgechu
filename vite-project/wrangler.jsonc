@@ -17,8 +17,4 @@
         "database_name": "gimon-notes-db",
         "database_id": "0000000-0000-0000-0000-000000000000"
     }],
-    "vars": {
-        "VAPID_PUBLIC_KEY": "BBjdwyXy2MjoNnjH2aUdxOgzi7VbpzMO2OcSinm8twFQvSSLIBJcHG7i56QGRp1qA013CTOu8UwY4F0ogG_AirI"
-    }
-
 }
