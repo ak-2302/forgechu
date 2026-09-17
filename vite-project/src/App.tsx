@@ -134,6 +134,7 @@ function App() {
           <div className="memo-editor-top">
             <textarea
               ref={inputRef}
+              autoFocus
               className="memo-editor-input"
               aria-label="メモ本文"
               placeholder="疑問をメモ…"
