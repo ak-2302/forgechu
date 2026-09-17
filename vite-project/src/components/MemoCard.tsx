@@ -1,4 +1,4 @@
-import type { MemoSearch } from "../search/types";
+import type { MemoSearch, WikipediaArticle } from "../search/types";
 import type { Tag } from "../tags";
 import "./MemoCard.css";
 import MemoOption from "./MemoOption";
@@ -10,6 +10,8 @@ const MemoCard = (props: {
   date: string;
   tags: Tag[];
   search?: MemoSearch;
+  onSelectCandidate?: (candidate: WikipediaArticle) => void;
+  onBackToCandidates?: () => void;
   onDelete?: () => void;
 }) => {
   const searchQuery = [props.textData.trim(), ...props.tags].filter(Boolean).join(' ');
@@ -40,7 +42,7 @@ const MemoCard = (props: {
         </>
       </div>
       <p className="memo-date">{props.date}</p>
-      {props.search && <SearchResult search={props.search} />}
+      {props.search && <SearchResult search={props.search} onSelectCandidate={props.onSelectCandidate} onBackToCandidates={props.onBackToCandidates} />}
     </div>
   );
 };

@@ -3,8 +3,8 @@ import './App.css';
 import settings from './assets/settings.png';
 import MemoCard from './components/MemoCard';
 import { summarize } from './search/summarize';
-import type { MemoSearch } from './search/types';
-import { searchWikipedia } from './search/wikipedia';
+import type { MemoSearch, SelectedArticle, WikipediaArticle } from './search/types';
+import { fetchArticle, searchWikipedia } from './search/wikipedia';
 import { TAGS, TAG_KEY, type Tag } from './tags';
 
 function App() {
@@ -98,6 +98,29 @@ function App() {
     }
   };
 
+  const updateSelected = (id: string, selected: SelectedArticle | undefined, pending?: WikipediaArticle) => {
+    setMemos(current => current.map(memo => {
+      if (memo.id !== id || memo.search?.status !== 'done') return memo;
+      if (pending && (memo.search.selected?.status !== 'loading' || memo.search.selected.candidate.url !== pending.url)) return memo;
+      return { ...memo, search: { ...memo.search, selected } };
+    }));
+  };
+
+  const selectCandidate = async (id: string, candidate: WikipediaArticle, tag: Tag | null) => {
+    updateSelected(id, { status: 'loading', candidate });
+    try {
+      const result = await fetchArticle(candidate.title);
+      if (result.status !== 'found') {
+        updateSelected(id, { status: 'error', candidate }, candidate);
+        return;
+      }
+      const summary = await summarize(result, tag);
+      updateSelected(id, { status: 'done', candidate, result, summary }, candidate);
+    } catch {
+      updateSelected(id, { status: 'error', candidate }, candidate);
+    }
+  };
+
   const saveMemo = () => {
     if (!text.trim()) return;
     const now = new Date();
@@ -137,7 +160,7 @@ function App() {
       </dialog>
       <div id="memo-list">
         {memos.map(memo => (
-          <MemoCard key={memo.id} textData={memo.textData} date={memo.date} tags={memo.tags} search={memo.search} onDelete={() => setMemos(current => current.filter(item => item.id !== memo.id))} />
+          <MemoCard key={memo.id} textData={memo.textData} date={memo.date} tags={memo.tags} search={memo.search} onSelectCandidate={candidate => selectCandidate(memo.id, candidate, memo.tags[0] ?? null)} onBackToCandidates={() => updateSelected(memo.id, undefined)} onDelete={() => setMemos(current => current.filter(item => item.id !== memo.id))} />
         ))}
       </div>
 
