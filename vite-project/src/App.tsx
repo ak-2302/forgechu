@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type TouchEvent } from 'react';
 import './App.css';
 import settings from './assets/settings.png';
 import MemoCard from './components/MemoCard';
+import SearchModeToggle, { type SearchMode } from './components/SearchModeToggle';
 import { answerFor } from './search/answer';
 import { summarize } from './search/summarize';
 import type { MemoSearch, SelectedArticle, WikipediaArticle } from './search/types';
@@ -9,7 +10,7 @@ import { fetchArticle, searchWikipedia } from './search/wikipedia';
 import { TAGS, TAG_KEY, type Tag } from './tags';
 
 function App() {
-  const [memos, setMemos] = useState<{ id: string; textData: string; date: string; tags: Tag[]; searchMode?: 'now'; search?: MemoSearch }[]>([
+  const [memos, setMemos] = useState<{ id: string; textData: string; date: string; tags: Tag[]; searchMode?: SearchMode; search?: MemoSearch }[]>([
     { id: 'initial-1', textData: 'サトシ・ナカモト', date: '1970/01/01 00:00:00', tags: ['だれ'] },
     { id: 'initial-2', textData: 'ンジャメナ', date: '1973/09/07 00:00:00', tags: ['どこ'] },
     { id: 'initial-3', textData: '１０まんボルト', date: '1996/02/27 00:00:00', tags: ['方法'] },
@@ -19,6 +20,7 @@ function App() {
   ]);
   const [text, setText] = useState('');
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
+  const [searchMode, setSearchMode] = useState<SearchMode>('now');
   const [isEditorOpen, setIsEditorOpen] = useState(true);
   const editorRef = useRef<HTMLElement>(null);
   const settingsRef = useRef<HTMLDialogElement>(null);
@@ -93,6 +95,12 @@ function App() {
     inputRef.current?.focus();
   };
 
+  const changeSearchMode = (mode: SearchMode) => {
+    if (!isEditorOpen) return;
+    setSearchMode(mode);
+    inputRef.current?.focus();
+  };
+
   const updateSearch = (id: string, search: MemoSearch) => {
     setMemos(current => current.map(memo => memo.id === id ? { ...memo, search } : memo));
   };
@@ -146,11 +154,9 @@ function App() {
     const pad = (value: number) => String(value).padStart(2, '0');
     const date = `${now.getFullYear()}/${pad(now.getMonth() + 1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
     const id = crypto.randomUUID();
-    setMemos(current => [
-      ...current,
-      { id, textData: text.trim(), date, tags: selectedTag ? [selectedTag] : [], searchMode: 'now', search: { status: 'loading' } },
-    ]);
-    runSearch(id, text.trim(), selectedTag);
+    const memo = { id, textData: text.trim(), date, tags: selectedTag ? [selectedTag] : [], searchMode };
+    setMemos(current => [...current, searchMode === 'now' ? { ...memo, search: { status: 'loading' } } : memo]);
+    if (searchMode === 'now') runSearch(id, text.trim(), selectedTag);
     setText('');
     setSelectedTag(null);
     setIsEditorOpen(false);
@@ -246,6 +252,7 @@ function App() {
               }}
               rows={1}
             />
+            <SearchModeToggle value={searchMode} onChange={changeSearchMode} />
           </div>
           {editingMemo && (
             <div className="memo-edit-status">

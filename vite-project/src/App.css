@@ -151,7 +151,7 @@ body:has(.memo-editor.is-open) {
 .memo-editor-input {
   flex: 1;
   min-width: 0;
-  min-height: 2.4rem;
+  min-height: 44px;
   box-sizing: border-box;
   padding: 0.5rem 0.8rem;
   border: 1px solid #e3e8f0;
